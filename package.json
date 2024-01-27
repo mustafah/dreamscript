@@ -1,0 +1,79 @@
+{
+	"name": "calico-colors",
+	"description": "Dreamscript - Basic Prompt scripting",
+	"version": "0.0.1",
+	"publisher": "mustafah",
+	"private": true,
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mustafah/dreamscript"
+	},
+	"engines": {
+		"vscode": "^1.74.0"
+	},
+	"extensionKind": [
+		"ui",
+		"workspace"
+	],
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [],
+	"main": "./out/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"panel": [
+				{
+					"id": "myCustomViewContainer",
+					"title": "✨ Images",
+					"icon": "icons/images.svg"
+				}
+			]
+		},
+		"views": {
+			"myCustomViewContainer": [
+				{
+					"type": "webview",
+					"id": "dreamscript.imagesView",
+					"name": "Dreamscript"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "dreamscript.addColor",
+				"category": "Calico Colors",
+				"title": "Add Color"
+			},
+			{
+				"command": "dreamscript.clearColors",
+				"category": "Calico Colors",
+				"title": "Clear Colors",
+				"icon": "$(clear-all)"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "dreamscript.clearColors",
+					"group": "navigation",
+					"when": "view == dreamscript.imagesView"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint \"src/**/*.ts\"",
+		"watch": "tsc -w -p ./"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.73.0",
+		"@typescript-eslint/eslint-plugin": "^6.7.0",
+		"@typescript-eslint/parser": "^6.7.0",
+		"eslint": "^8.32.0",
+		"typescript": "^5.3.2"
+	}
+}
