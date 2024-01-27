@@ -3,7 +3,7 @@ progressive=False
 chunk="None"
 question="
 
-how to make dreamscript.imagesView position on the bottom not in explorer ?
+    we want add images refernced in currently viewed dream file and display it inside _getHtmlForWebview
 
 "
 
@@ -11,10 +11,6 @@ file_list="
 
     /Users/mustafah/Projects/dreamscript/src/extension.ts
     /Users/mustafah/Projects/dreamscript/package.json
-    # /Users/mustafah/Projects/dreamscript/src/branch.command.ts
-    # /Users/mustafah/Projects/dreamscript/src/llm.ts
-    # /Users/mustafah/Projects/dreamscript/src/dream.project
-    # /Users/mustafah/Projects/dreamscript/src/paste.command.ts
-    # /Users/mustafah/Projects/dreamscript/src/images.panel.ts
+    /Users/mustafah/Projects/dreamscript/scene1.dream
 
 "
