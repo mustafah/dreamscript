@@ -3,14 +3,49 @@ progressive=False
 chunk="None"
 question="
 
-    we want add images refernced in currently viewed dream file and display it inside _getHtmlForWebview
+Cannot find name 'TransformStream'.
+
+35 export declare function createChatMessageChunkEncoderStream(): TransformStream<BaseMessageChunk, any>;
+                                                                  ~~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/tracers/log_stream.d.ts:92:32 - error TS2304: Cannot find name 'TransformStream'.
+
+92     protected transformStream: TransformStream;
+                                  ~~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/tracers/log_stream.d.ts:93:13 - error TS2304: Cannot find name 'WritableStreamDefaultWriter'.
+
+93     writer: WritableStreamDefaultWriter;
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/utils/stream.d.ts:1:61 - error TS2304: Cannot find name 'ReadableStream'.
+
+1 export interface IterableReadableStreamInterface<T> extends ReadableStream<T>, AsyncIterable<T> {
+                                                              ~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/utils/stream.d.ts:3:56 - error TS2304: Cannot find name 'ReadableStream'.
+
+3 export declare class IterableReadableStream<T> extends ReadableStream<T> implements IterableReadableStreamInterface<T> {
+                                                         ~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/utils/stream.d.ts:4:13 - error TS2304: Cannot find name 'ReadableStreamDefaultReader'.
+
+4     reader: ReadableStreamDefaultReader<T>;
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+node_modules/@langchain/core/dist/utils/stream.d.ts:10:42 - error TS2304: Cannot find name 'ReadableStream'.
+
+10     static fromReadableStream<T>(stream: ReadableStream<T>): IterableReadableStream<T>;
+                                            ~~~~~~~~~~~~~~
+
 
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/extension.ts
+    # /Users/mustafah/Projects/dreamscript/src/extension.ts
+    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     /Users/mustafah/Projects/dreamscript/package.json
-    /Users/mustafah/Projects/dreamscript/scene1.dream
+    # /Users/mustafah/Projects/dreamscript/scene1.dream
 
 "

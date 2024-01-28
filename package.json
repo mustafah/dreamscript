@@ -19,28 +19,43 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [],
 	"main": "./out/extension.js",
+	"activationEvents": [
+		"onLanguage:dream"
+	],
 	"contributes": {
-		"viewsContainers": {
-			"panel": [
-				{
-					"id": "myCustomViewContainer",
-					"title": "✨ Images",
-					"icon": "icons/images.svg"
-				}
+		"languages": [{
+			"id": "dream",
+			"extensions": [
+				".dream"
 			]
+		}],
+		"viewsContainers": {
+			"panel": [{
+				"id": "myCustomViewContainer",
+				"title": "✨ Images",
+				"icon": "icons/images.svg"
+			}]
 		},
 		"views": {
-			"myCustomViewContainer": [
-				{
-					"type": "webview",
-					"id": "dreamscript.imagesView",
-					"name": "Dreamscript"
-				}
-			]
+			"myCustomViewContainer": [{
+				"type": "webview",
+				"id": "dreamscript.imagesView",
+				"name": "Dreamscript"
+			}]
 		},
-		"commands": [
+		"commands": [{
+				"command": "dreamscript.translate",
+				"title": "Translate"
+			},
+			{
+				"command": "dreamscript.branch",
+				"title": "Branch"
+			},
+			{
+				"command": "dreamscript.pasteImage",
+				"title": "Paste Image"
+			},
 			{
 				"command": "dreamscript.addColor",
 				"category": "Calico Colors",
@@ -54,11 +69,26 @@
 			}
 		],
 		"menus": {
-			"view/title": [
+			"view/title": [{
+				"command": "dreamscript.clearColors",
+				"group": "navigation",
+				"when": "view == dreamscript.imagesView"
+			}],
+			"editor/title": [
 				{
-					"command": "dreamscript.clearColors",
-					"group": "navigation",
-					"when": "view == dreamscript.imagesView"
+				  "when": "resourceLangId == dream",
+				  "command": "dreamscript.translate",
+				  "group": "navigation"
+				},
+				{
+				  "when": "resourceLangId == dream",
+				  "command": "dreamscript.branch",
+				  "group": "navigation"
+				},
+				{
+				  "when": "resourceLangId == dream",
+				  "command": "dreamscript.pasteImage",
+				  "group": "navigation"
 				}
 			]
 		}
@@ -75,5 +105,12 @@
 		"@typescript-eslint/parser": "^6.7.0",
 		"eslint": "^8.32.0",
 		"typescript": "^5.3.2"
+	},
+	"dependencies": {
+		"@langchain/openai": "^0.0.12",
+		"axios": "^1.6.5",
+		"clipboardy": "^4.0.0",
+		"handlebars": "^4.7.8",
+		"langchain": "^0.1.4"
 	}
 }
