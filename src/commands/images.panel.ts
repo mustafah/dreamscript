@@ -13,6 +13,12 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
                 this.updateWebviewContent(event.document);
             }
         });
+        // Listen for active editor changes
+        vscode.window.onDidChangeActiveTextEditor(editor => {
+            if (editor && editor.document.languageId === 'dream') {
+                this.updateWebviewContent(editor.document.getText());
+            }
+        });
     }
 
     public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {

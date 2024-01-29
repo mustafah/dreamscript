@@ -3,14 +3,14 @@ progressive=False
 chunk="None"
 question="
 
-when calling getHtmlForWebview, the new images get partially rendered or not rendered at all why is that !
+    in case of image was copied not image url, we should handle it as well
 
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
-    /Users/mustafah/Projects/dreamscript/media/images.panel.js
+    # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
+    # /Users/mustafah/Projects/dreamscript/media/images.panel.js
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
     /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     # /Users/mustafah/Projects/dreamscript/package.json

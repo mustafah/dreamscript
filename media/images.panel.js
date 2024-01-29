@@ -29,8 +29,21 @@
                 img.src = src.href;
             });
         }
+        function fadeInNewImages() {
+            const images = document.querySelectorAll('.grid-item img');
+            images.forEach(img => {
+                if (!img.style.transition) {
+                    img.style.opacity = 0;
+                    img.style.transition = 'opacity 0.5s ease-in-out';
+                    img.onload = () => { img.style.opacity = 1; };
+                }
+            });
+        }
         initializeMasonry();
-        setTimeout(updateImageSources, 1000);
+        fadeInNewImages();
+        setTimeout(function () {
+            updateImageSources();
+        }, 1000);
     });
 }());
 
