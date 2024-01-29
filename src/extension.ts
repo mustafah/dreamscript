@@ -2,11 +2,12 @@ import * as vscode from 'vscode';
 import { branch } from './commands/branch.command';
 import { pasteImage } from './commands/paste.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
+import { Globals } from './globals';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
 	// <ImagesPanel>
-	const provider = new ImagesPanelViewProvider(context.extensionUri);
+    const provider = Globals.imagesPanelProvider = new ImagesPanelViewProvider(context.extensionUri);
 	context.subscriptions.push(vscode.window.registerWebviewViewProvider(ImagesPanelViewProvider.viewType, provider));
 	// </ImagesPanel>
 	
@@ -23,4 +24,5 @@ export function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(pasteImageDisposable);
 	// </PasteImage>
+    
 }

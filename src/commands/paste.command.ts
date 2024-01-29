@@ -2,15 +2,16 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import axios from 'axios';
+import { Globals } from '../globals';
 
 export async function pasteImage() {
     const editor = vscode.window.activeTextEditor;
-    const clipboardy = (await import('clipboardy')).default;
 
     if (editor) {
         await editor.document.save();
 
-        const clipboardContent = clipboardy.readSync();
+        const clipboardContent = await vscode.env.clipboard.readText();
+
         const isUrl = /^https?:\/\//i.test(clipboardContent);
 
         if (!isUrl) {
@@ -47,7 +48,7 @@ export async function pasteImage() {
 
                 if (match) {
                     if (match[2].trim()) {
-                        dreamFileContent = dreamFileContent.replace(outputRegex, `$1${match[2]}, ${imageFileName}`);
+                        dreamFileContent = dreamFileContent.replace(outputRegex, `$1${imageFileName}, ${match[2]}`);
                     } else {
                         dreamFileContent = dreamFileContent.replace(outputRegex, `$1${match[2]}${imageFileName}`);
                     }
@@ -58,6 +59,9 @@ export async function pasteImage() {
 
                 fs.writeFileSync(dreamFilePath, dreamFileContent);
                 vscode.window.showInformationMessage(`Image added: ${imageFileName}`);
+                    
+                Globals.imagesPanelProvider?.updateWebviewContent(dreamFileContent);
+                
             } else {
                 vscode.window.showErrorMessage('Dream file not found.');
             }

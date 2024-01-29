@@ -1,5 +1,5 @@
 {
-	"name": "calico-colors",
+	"name": "dreamscript",
 	"description": "Dreamscript - Basic Prompt scripting",
 	"version": "0.0.1",
 	"publisher": "mustafah",
@@ -117,7 +117,6 @@
 	},
 	"dependencies": {
 		"axios": "^1.6.5",
-		"clipboardy": "^4.0.0",
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",
 		"node-fetch": "^3.3.2"

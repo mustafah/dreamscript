@@ -31,10 +31,13 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         }
     }
 
-    public updateWebviewContent(document: vscode.TextDocument) {
+    public updateWebviewContent(documentOrString: vscode.TextDocument | string) {
         if (this._view) {
-            const imagePaths = this.extractImagePaths(document.getText());
-            this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths);
+            const documentText = typeof documentOrString === 'string' 
+            ? documentOrString 
+            : documentOrString.getText();
+            const imagePaths = this.extractImagePaths(documentText);
+            this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths); // Reset to actual content
         }
     }
 
@@ -54,12 +57,18 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
 
     private getHtmlForWebview(webview: vscode.Webview, imagePaths: string[]): string {
 
-        const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'masonry.pkgd.min.js');
-        const masonryScriptUri = webview.asWebviewUri(scriptPathOnDisk);
+        const masonryScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'masonry.pkgd.min.js'));
+        const imagesPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'images.panel.js'));
+        const stylesMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
+        const imagesloadedScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'imagesloaded.pkgd.min.js'));
+        const uniqueString = new Date().getTime();
+        // Append unique string to each image path
+        const imageTags = imagePaths.map(path => {
+            const imagePathWithQuery = new URL(path);
+            imagePathWithQuery.searchParams.set('v', uniqueString.toString());
+            return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
+        }).join('');
 
-        const imageTags = imagePaths.map(path => `
-        ${path}
-        <img src="${webview.asWebviewUri(vscode.Uri.parse(path))}" /><br/>`).join('');
         return `
             <!DOCTYPE html>
             <html lang="en">
@@ -67,13 +76,25 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Dreamscript Images</title>
+                <link href="${stylesMainUri}" rel="stylesheet">
+                <script src="${imagesloadedScriptUri}"></script>
                 <script src="${masonryScriptUri}"></script>
             </head>
             <body>
-                ${imageTags}
+                <div class="grid">
+                    ${imageTags}
+                </div>
+                <script src="${imagesPanelScriptUri}"></script>
             </body>
             </html>
         `;
     }
 }
 
+function forceReflowWebview(webviewPanel) {
+    const originalContent = webviewPanel.webview.html;
+    webviewPanel.webview.html = '<html><body>Reloading...</body></html>';
+    setTimeout(() => {
+        webviewPanel.webview.html = originalContent;
+    }, 100); // Delay can be adjusted
+}

@@ -3,17 +3,18 @@ progressive=False
 chunk="None"
 question="
 
-    using Masonry , we want display images in pinterest style to fit them all !
-
+when calling getHtmlForWebview, the new images get partially rendered or not rendered at all why is that !
 
 "
 
 file_list="
 
     /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
+    /Users/mustafah/Projects/dreamscript/media/images.panel.js
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
+    /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     # /Users/mustafah/Projects/dreamscript/package.json
+    # /Users/mustafah/Projects/dreamscript/tsconfig.json
     # /Users/mustafah/Projects/dreamscript/scene1.dream
 
 "

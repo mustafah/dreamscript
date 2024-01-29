@@ -2,39 +2,19 @@ body {
 	background-color: transparent;
 }
 
-.color-list {
-	list-style: none;
-	padding: 0;
-}
-
-.color-entry {
+.grid { 
 	width: 100%;
-	display: flex;
-	margin-bottom: 0.4em;
-	border: 1px solid var(--vscode-input-border);
+	/* background: black; */
 }
 
-.color-preview {
-	width: 2em;
-	height: 2em;
+.grid-item { 
+	width: 200px;
+	border-radius: 8px;
+	overflow: hidden;
+	box-sizing: border-box;
+	padding: 8px;
 }
 
-.color-preview:hover {
-	outline: inset white;
-}
-
-.color-input {
-	display: block;
-	flex: 1;
-	width: 100%;
-	color: var(--vscode-input-foreground);
-	background-color: var(--vscode-input-background);
-	border: none;
-	padding: 0 0.6em;
-}
-
-.add-color-button {
-	display: block;
-	border: none;
-	margin: 0 auto;
+.grid-item img {
+	border-radius: 8px;
 }
