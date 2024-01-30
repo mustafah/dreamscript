@@ -3,17 +3,18 @@ progressive=False
 chunk="None"
 question="
 
-    in case of image was copied not image url, we should handle it as well
+    inspired from monaco-dreamscript.js, tell me how to add same syntax hilighting to our dream extension files
 
 "
 
 file_list="
 
+    /Users/mustafah/Projects/dreams-origins/src/components/lang/monaco-dreamscript.js
     # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
     # /Users/mustafah/Projects/dreamscript/media/images.panel.js
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
-    /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
-    # /Users/mustafah/Projects/dreamscript/package.json
+    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
+    /Users/mustafah/Projects/dreamscript/package.json
     # /Users/mustafah/Projects/dreamscript/tsconfig.json
     # /Users/mustafah/Projects/dreamscript/scene1.dream
 

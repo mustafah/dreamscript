@@ -32,6 +32,10 @@
 				]
 			}
 		],
+
+
+
+		
 		"viewsContainers": {
 			"panel": [
 				{
@@ -106,7 +110,8 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"lint": "eslint \"src/**/*.ts\"",
-		"watch": "tsc -w -p ./"
+		"watch": "tsc -w -p ./",
+		"postinstall": "node install.js"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.73.0",
@@ -119,6 +124,7 @@
 		"axios": "^1.6.5",
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",
-		"node-fetch": "^3.3.2"
+		"node-fetch": "^3.3.2",
+		"save-clipboard-image": "^1.0.0"
 	}
 }
