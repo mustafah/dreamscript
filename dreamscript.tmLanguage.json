@@ -1,0 +1,28 @@
+{
+	"scopeName": "source.dreamscript",
+	"patterns": [
+	  {
+		"include": "#comments"
+	  },
+	  {
+		"name": "meta.special-tilde-line.dreamscript string.other.dreamscript",
+		"match": "~.*?(~|$)"
+	  }
+	],
+	"repository": {
+	  "comments": {
+		"patterns": [
+		  {
+			"name": "comment.line.double-slash.dreamscript",
+			"match": "//.*"
+		  },
+		  {
+			"name": "comment.block.dreamscript",
+			"begin": "/\\*",
+			"end": "\\*/"
+		  }
+		]
+	  }
+	}
+  }
+  

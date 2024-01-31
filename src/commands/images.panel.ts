@@ -9,13 +9,13 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         // Listen for changes in any text document
         vscode.workspace.onDidChangeTextDocument(event => {
             const editor = vscode.window.activeTextEditor;
-            if (editor && editor.document === event.document && event.document.languageId === 'dream') {
+            if (editor && editor.document === event.document && event.document.languageId === 'dreamscript') {
                 this.updateWebviewContent(event.document);
             }
         });
         // Listen for active editor changes
         vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && editor.document.languageId === 'dream') {
+            if (editor && editor.document.languageId === 'dreamscript') {
                 this.updateWebviewContent(editor.document.getText());
             }
         });
@@ -32,7 +32,7 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         };
         // Initialize with current active editor if it is a .dream file
         const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor && activeEditor.document.languageId === 'dream') {
+        if (activeEditor && activeEditor.document.languageId === 'dreamscript') {
             this.updateWebviewContent(activeEditor.document);
         }
     }

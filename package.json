@@ -24,16 +24,18 @@
 		"onLanguage:dream"
 	],
 	"contributes": {
-		"languages": [
-			{
-				"id": "dream",
-				"extensions": [
-					".dream"
-				]
-			}
-		],
 
-
+		"languages": [{
+			"id": "dreamscript",
+			"aliases": ["DreamScript", "dreamscript"],
+			"extensions": [".dream"],
+			"configuration": "./language-configuration.json"
+		  }],
+		  "grammars": [{
+			"language": "dreamscript",
+			"scopeName": "source.dreamscript",
+			"path": "./dreamscript.tmLanguage.json"
+		  }],
 
 		
 		"viewsContainers": {
@@ -89,17 +91,17 @@
 			],
 			"editor/title": [
 				{
-					"when": "resourceLangId == dream",
+					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.translate",
 					"group": "navigation"
 				},
 				{
-					"when": "resourceLangId == dream",
+					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.branch",
 					"group": "navigation"
 				},
 				{
-					"when": "resourceLangId == dream",
+					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.pasteImage",
 					"group": "navigation"
 				}
