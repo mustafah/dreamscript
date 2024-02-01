@@ -3,10 +3,8 @@ progressive=False
 chunk="None"
 question="
 
-    We want each image in the image panel to have an icon, when clicked it mark this image as favorite,
-    and another icon when clicked we should add metadata text to this image,
-
-    the metadata should be stored inside json file mapping image and their meta data
+    we want a way to when clicked the metadata button , create and open a file with the same of the image but with the extension
+    .metadata.txt
 
 "
 
@@ -18,8 +16,8 @@ file_list="
     # /Users/mustafah/Projects/dreamscript/dreamscript.tmLanguage.json
     # /Users/mustafah/Projects/dreamscript/package.json
 
-    /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
-    # /Users/mustafah/Projects/dreamscript/media/images.panel.js
+    # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
+    /Users/mustafah/Projects/dreamscript/media/images.panel.js
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     # /Users/mustafah/Projects/dreamscript/tsconfig.json

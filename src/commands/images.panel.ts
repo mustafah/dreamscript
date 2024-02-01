@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { IMAGES_REGEX } from './regex';
+import { readMetadata } from './metadata';
+import { promptForMetadata } from './prompt';
 
 export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'dreamscript.imagesView';
@@ -35,15 +39,82 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         if (activeEditor && activeEditor.document.languageId === 'dreamscript') {
             this.updateWebviewContent(activeEditor.document);
         }
+
+        this._view.webview.onDidReceiveMessage(async (message) => {
+            if (message.command === 'updateMetadata') this.updateMetadata(message);
+            else if (message.command === 'openImage') this.openImage(message.path);
+            else if (message.command === 'createOrOpenMetadata') {
+                await this.createOrOpenMetadataFile(message.path);
+            }
+        });
+        
     }
 
-    public updateWebviewContent(documentOrString: vscode.TextDocument | string) {
+    
+    private async createOrOpenMetadataFile(imageName) {
+        const workspaceRoot = vscode.workspace.rootPath;
+        const imageDir = path.join(workspaceRoot, 'images');
+
+        // const imageDir = path.dirname(imagePath);
+        // const imageName = path.basename(imagePath, path.extname(imagePath));
+        const metaFilePath = path.join(imageDir, `${imageName}.metadata.txt`);
+
+        const metaFileUri = vscode.Uri.file(metaFilePath);
+    
+        // Check if the file exists, if not create an empty file
+        try {
+            await vscode.workspace.fs.stat(metaFileUri);
+        } catch (error) {
+            await vscode.workspace.fs.writeFile(metaFileUri, new Uint8Array());
+        }
+    
+        // Open the file in a new editor tab
+        const document = await vscode.workspace.openTextDocument(metaFileUri);
+        await vscode.window.showTextDocument(document);
+    }
+
+    // Function to open the image file
+    private openImage(imagePath) {
+        const imageUri = vscode.Uri.file(imagePath);
+        // vscode.commands.executeCommand('vscode.open', imageUri);
+        promptForMetadata();
+    }
+    private updateMetadata(message: any) {
+        const workspaceRoot = vscode.workspace.rootPath;
+        const metadataFilePath = path.join(workspaceRoot, 'images', 'metadata.json');
+        
+        let existingData = {};
+    
+        try {
+            if (fs.existsSync(metadataFilePath)) {
+                const fileContent = fs.readFileSync(metadataFilePath, 'utf8');
+                existingData = JSON.parse(fileContent);
+            }
+        } catch (error) {
+            console.error('Error reading or parsing metadata.json:', error);
+            // Handle the error or notify the user as necessary
+        }
+    
+        // Update with new data
+        existingData[message.path] = { ...existingData[message.path], ...message.data };
+    
+        try {
+            fs.writeFileSync(metadataFilePath, JSON.stringify(existingData, null, 2), 'utf8');
+        } catch (error) {
+            console.error('Error writing to metadata.json:', error);
+        }
+    }
+
+    public async updateWebviewContent(documentOrString: vscode.TextDocument | string) {
         if (this._view) {
             const documentText = typeof documentOrString === 'string' 
             ? documentOrString 
             : documentOrString.getText();
             const imagePaths = this.extractImagePaths(documentText);
             this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths); // Reset to actual content
+
+            const metadata = await readMetadata();
+            this._view.webview.postMessage({ command: 'loadMetadata', data: metadata });
         }
     }
 
@@ -72,7 +143,15 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         const imageTags = imagePaths.map(path => {
             const imagePathWithQuery = new URL(path);
             imagePathWithQuery.searchParams.set('v', uniqueString.toString());
-            return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
+            // return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
+
+            const fileNameWithoutExtension = path.split('/').pop().split('.').slice(0, -1).join('.');
+
+            return `<div class="grid-item">
+            <img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" />
+                <button class="favorite-btn" data-path="${fileNameWithoutExtension}">❤️</button>
+                <button class="meta-btn" data-path="${fileNameWithoutExtension}">📝</button>
+            </div>`;
         }).join('');
 
         return `
