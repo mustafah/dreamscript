@@ -4,6 +4,7 @@ import * as path from 'path';
 import axios from 'axios';
 import { Globals } from '../globals';
 import { execSync } from 'child_process';
+import { IMAGES_REGEX } from './regex';
 
 
 
@@ -46,7 +47,7 @@ export async function pasteImage() {
             const dreamFilePath = editor.document.uri.fsPath;
             if (fs.existsSync(dreamFilePath)) {
                 let dreamFileContent = fs.readFileSync(dreamFilePath, 'utf8');
-                const outputRegex = /(~\s*images\s*=)([^\n]*)/i;
+                const outputRegex = IMAGES_REGEX;
                 const match = dreamFileContent.match(outputRegex);
 
                 if (match) {

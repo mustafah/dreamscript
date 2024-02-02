@@ -75,7 +75,6 @@
                 updateMetadata(imagePath, { favorite: isFavorited });
                 event.target.textContent = isFavorited ? '❤️' : '🤍';
             } else if (event.target.classList.contains('meta-btn')) {
-                debugger
                 const imagePath = event.target.dataset.path;
                 vscode.postMessage({ command: 'createOrOpenMetadata', path: imagePath });
             }
@@ -91,6 +90,60 @@
                 // ... handle other messages
             }
         });
+
+        //// <context>
+        function deleteImage(image) {
+            vscode.postMessage({
+                command: 'deleteImage', 
+                path: image.dataset.path
+            });
+        }
+        const clickHandler = e => {
+            // e.label.innerText = e.label.innerText.split('').reverse().join('');
+            // e.data.text = e.label.innerText;
+            e.handled = true;
+            contextMenu.hide();
+        };
+        let currentDreamImage = null;
+        const contextMenu = new ContextMenu(document.body, [
+            {text: 'View Source', onclick: clickHandler, hotkey: '`to see everything`'},
+            null,
+            { text: 'Delete', onclick: e => deleteImage(currentDreamImage) }
+            // {text: 'Forward', hotkey: 'Alt+Right arrow', disabled: true, onclick: clickHandler},
+            // {text: 'Reload', hotkey: 'Ctrl+R', onclick: clickHandler},
+            // null,
+            // {text: 'Save as...', hotkey: 'Ctrl+S', onclick: clickHandler},
+            // {text: 'Print...', hotkey: 'Ctrl+P', onclick: clickHandler},
+            // {text: 'Cast...', onclick: clickHandler},
+            // {text: 'Translate to English', onclick: clickHandler},
+            // null,
+            // {text: 'View page source', hotkey: 'Ctrl+U', onclick: clickHandler},
+            // {text: 'Inspect', hotkey: 'Ctrl+Shift+I', onclick: clickHandler},
+        ]);
+        function isDreamImage(el) {
+            while (el && el !== document.body) {
+                if (el.classList.contains('dream-image')) {
+                    return el;
+                }
+                el = el.parentNode;
+            }
+            return null;
+        }
+        document.addEventListener('click', event => {
+            contextMenu.hide();
+        });
+        
+        document.addEventListener('contextmenu', event => {
+            contextMenu.hide();
+            let dreamImage = null;
+            if (dreamImage = isDreamImage(event.target)) {
+                currentDreamImage = dreamImage;
+                contextMenu.show(event.pageX, event.pageY);
+            }
+            event.preventDefault(); // Prevent the default browser context menu
+        });
+        // contextMenu.install();
+        //// </context>
     });
 }());
 

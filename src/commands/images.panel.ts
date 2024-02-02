@@ -4,6 +4,7 @@ import * as path from 'path';
 import { IMAGES_REGEX } from './regex';
 import { readMetadata } from './metadata';
 import { promptForMetadata } from './prompt';
+import { deleteImage } from './delete.command';
 
 export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'dreamscript.imagesView';
@@ -43,14 +44,12 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
         this._view.webview.onDidReceiveMessage(async (message) => {
             if (message.command === 'updateMetadata') this.updateMetadata(message);
             else if (message.command === 'openImage') this.openImage(message.path);
-            else if (message.command === 'createOrOpenMetadata') {
-                await this.createOrOpenMetadataFile(message.path);
-            }
+            else if (message.command === 'createOrOpenMetadata') await this.createOrOpenMetadataFile(message.path);
+            else if (message.command === 'deleteImage') deleteImage(message.path);            (message.path);
         });
         
     }
 
-    
     private async createOrOpenMetadataFile(imageName) {
         const workspaceRoot = vscode.workspace.rootPath;
         const imageDir = path.join(workspaceRoot, 'images');
@@ -76,8 +75,7 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
     // Function to open the image file
     private openImage(imagePath) {
         const imageUri = vscode.Uri.file(imagePath);
-        // vscode.commands.executeCommand('vscode.open', imageUri);
-        promptForMetadata();
+        vscode.commands.executeCommand('vscode.open', imageUri);
     }
     private updateMetadata(message: any) {
         const workspaceRoot = vscode.workspace.rootPath;
@@ -135,9 +133,14 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
     private getHtmlForWebview(webview: vscode.Webview, imagePaths: string[]): string {
 
         const masonryScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'masonry.pkgd.min.js'));
-        const imagesPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'images.panel.js'));
+        const imagesPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'images.panel.wvjs'));
         const stylesMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
         const imagesloadedScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'imagesloaded.pkgd.min.js'));
+
+        const contextScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'context.min.js'));
+        const stylesContextUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'skins', 'hackerman.css'));
+
+
         const uniqueString = new Date().getTime();
         // Append unique string to each image path
         const imageTags = imagePaths.map(path => {
@@ -148,7 +151,7 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
             const fileNameWithoutExtension = path.split('/').pop().split('.').slice(0, -1).join('.');
 
             return `<div class="grid-item">
-            <img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" />
+            <img class="dream-image" src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" data-path="${fileNameWithoutExtension}" />
                 <button class="favorite-btn" data-path="${fileNameWithoutExtension}">❤️</button>
                 <button class="meta-btn" data-path="${fileNameWithoutExtension}">📝</button>
             </div>`;
@@ -169,6 +172,10 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
                 <div class="grid">
                     ${imageTags}
                 </div>
+
+                <link href="${stylesContextUri}" rel="stylesheet">
+                <script src="${contextScriptUri}"></script>
+                <!---->
                 <script src="${imagesPanelScriptUri}"></script>
             </body>
             </html>
