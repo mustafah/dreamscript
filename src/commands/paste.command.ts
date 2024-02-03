@@ -60,6 +60,11 @@ export async function pasteImage() {
                 fs.writeFileSync(dreamFilePath, dreamFileContent);
                 vscode.window.showInformationMessage(`Image added: ${imageFileName}`);
                 Globals.imagesPanelProvider?.updateWebviewContent(dreamFileContent);
+
+                // Save the current dream file content as a snapshot
+                const originalPath = path.join(imagesDir, `${imageFileName}.original.dream`);
+                fs.writeFileSync(originalPath, dreamFileContent);
+
             } else {
                 vscode.window.showErrorMessage('Dream file not found.');
             }

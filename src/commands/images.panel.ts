@@ -45,9 +45,20 @@ export class ImagesPanelViewProvider implements vscode.WebviewViewProvider {
             if (message.command === 'updateMetadata') this.updateMetadata(message);
             else if (message.command === 'openImage') this.openImage(message.path);
             else if (message.command === 'createOrOpenMetadata') await this.createOrOpenMetadataFile(message.path);
-            else if (message.command === 'deleteImage') deleteImage(message.path);            (message.path);
+            else if (message.command === 'deleteImage') deleteImage(message.path);
+            else if (message.command === 'openOriginal') await this.openOriginalDreamFile(message.path);
         });
         
+    }
+
+    private async openOriginalDreamFile(imageName) {
+        const originalFileUri = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', `${imageName}.original.dream`);
+        try {
+            const document = await vscode.workspace.openTextDocument(originalFileUri);
+            await vscode.window.showTextDocument(document);
+        } catch (error) {
+            vscode.window.showErrorMessage(`The original source file does not exist: ${imageName}`);
+        }
     }
 
     private async createOrOpenMetadataFile(imageName) {

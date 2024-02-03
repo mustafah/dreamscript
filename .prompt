@@ -3,8 +3,8 @@ progressive=False
 chunk="None"
 question="
 
-    We want ' e.target ' inside ' { text: 'Delete', onclick: e => deleteImage(e.target.dataset.path) } '
-     to point to the image tag it was clicked on !
+    # We want when user paste image, to have snap shot of the dream file beside the image file,
+    we want for ' Original Source ' in the menu click to show that created file
 
 "
 
@@ -17,9 +17,9 @@ file_list="
     # /Users/mustafah/Projects/dreamscript/package.json
 
     # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
-    /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
+    # /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
+    /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/regex.ts
     # /Users/mustafah/Projects/dreamscript/tsconfig.json
     # /Users/mustafah/Projects/dreamscript/scene1.dream

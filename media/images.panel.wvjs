@@ -98,15 +98,12 @@
                 path: image.dataset.path
             });
         }
-        const clickHandler = e => {
-            // e.label.innerText = e.label.innerText.split('').reverse().join('');
-            // e.data.text = e.label.innerText;
-            e.handled = true;
-            contextMenu.hide();
-        };
+        function openOriginalSource(image) {
+            vscode.postMessage({ command: 'openOriginal', path: image.dataset.path });
+        }
         let currentDreamImage = null;
         const contextMenu = new ContextMenu(document.body, [
-            {text: 'View Source', onclick: clickHandler, hotkey: '`to see everything`'},
+            {text: 'Original Source', onclick: e => openOriginalSource(currentDreamImage)},
             null,
             { text: 'Delete', onclick: e => deleteImage(currentDreamImage) }
             // {text: 'Forward', hotkey: 'Alt+Right arrow', disabled: true, onclick: clickHandler},
