@@ -3,21 +3,25 @@ progressive=False
 chunk="None"
 question="
 
-    we want store the OPENAI_KEY store in secret place like vscode settings for example!
-    and if we try to retreive it we should prompt user for it
+    can you add dropdownload list in "editor/title" section where user can change configuration of llm backend
 
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
-    /Users/mustafah/Projects/dreamscript/src/commands/translate.command.ts
+    # /Users/mustafah/Projects/dreamscript/src/commands/keys.ts
+    # /Users/mustafah/Projects/dreamscript/src/commands/promptify.command.ts
+
+    # /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
+    # /Users/mustafah/Projects/dreamscript/playground
+
+    # /Users/mustafah/Projects/dreamscript/src/commands/translate.command.ts
 
     # /Users/mustafah/Projects/dreamscript/playground.js
     # /Users/mustafah/Projects/dreams-origins/src/components/lang/monaco-dreamscript.js
     # /Users/mustafah/Projects/dreamscript/language-configuration.json
     # /Users/mustafah/Projects/dreamscript/dreamscript.tmLanguage.json
-    # /Users/mustafah/Projects/dreamscript/package.json
+    /Users/mustafah/Projects/dreamscript/package.json
 
     # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
     # /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs

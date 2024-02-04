@@ -76,25 +76,27 @@
 				"title": "Paste Image"
 			},
 			{
-				"command": "dreamscript.addColor",
-				"category": "Calico Colors",
-				"title": "Add Color"
+				"command": "dreamscript.emojify",
+				"title": "Emojify"
 			},
 			{
-				"command": "dreamscript.clearColors",
-				"category": "Calico Colors",
-				"title": "Clear Colors",
-				"icon": "$(clear-all)"
+				"command": "dreamscript.promptify",
+				"title": "Promptify"
+			},
+			{
+				"command": "dreamscript.clearKeys",
+				"title": "✨ Dreamscript: Clear API keys"
+			},
+			{
+				"command": "dreamscript.setBackendOpenAI",
+				"title": "Set LLM Backend to OpenAI"
+			},
+			{
+				"command": "dreamscript.setBackendOllamaMistral",
+				"title": "Set LLM Backend to Ollama Mistral"
 			}
 		],
 		"menus": {
-			"view/title": [
-				{
-					"command": "dreamscript.clearColors",
-					"group": "navigation",
-					"when": "view == dreamscript.imagesView"
-				}
-			],
 			"editor/title": [
 				{
 					"when": "resourceLangId == dreamscript",
@@ -110,8 +112,46 @@
 					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.pasteImage",
 					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == dreamscript",
+					"command": "dreamscript.emojify",
+					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == dreamscript",
+					"command": "dreamscript.promptify",
+					"group": "navigation"
 				}
 			]
+		},
+		"configuration": {
+			"properties": {
+				"dreamscript.llmBackend": {
+					"type": "string",
+					"enum": ["OpenAI", "Ollama Mistral"],
+					"default": "OpenAI",
+					"description": "Select the LLM to use:"
+				},
+				"dreamscript.translationLanguage": {
+					"type": "string",
+					"default": "",
+					"description": "Preferred language for translation."
+				},
+				"dreamscript.promptifyMaxLines": {
+					"type": "integer",
+					"default": 2,
+					"minimum": 1,
+					"description": "Maximum number of lines for Promptify command"
+				},
+				"dreamscript.llmTemperature": {
+					"type": "number",
+					"default": 0.7,
+					"minimum": 0,
+					"maximum": 1,
+					"markdownDescription": "[LLM temperature](https://www.google.com/search?q=llm+temperature) setting (0 to 1), A higher temperature value (closer to 1) typically makes the output more diverse and creative"
+				}
+			}
 		}
 	},
 	"scripts": {
@@ -122,7 +162,7 @@
 		"postinstall": "node install.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.73.0",
+		"@types/vscode": "^1.86.0",
 		"@typescript-eslint/eslint-plugin": "^6.7.0",
 		"@typescript-eslint/parser": "^6.7.0",
 		"eslint": "^8.32.0",

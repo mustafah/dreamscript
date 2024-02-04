@@ -1,22 +1,30 @@
 import * as vscode from 'vscode';
+import { Globals } from '../globals';
 
-export async function getKey(): Promise<string | undefined> {
-    let openAiKey = await vscode.secrets.get('OPENAI_KEY');
+export class Keys {
 
-    if (!openAiKey) {
-        const inputKey = await vscode.window.showInputBox({
-            prompt: "Enter your OpenAI API Key",
-            ignoreFocusOut: true,
-            password: true
-        });
-
-        if (inputKey) {
-            await vscode.secrets.store('OPENAI_KEY', inputKey);
-            openAiKey = inputKey;
-        } else {
-            vscode.window.showErrorMessage("OpenAI API Key is required.");
+    static async getSecret(key: string, name: string, help: string = null): Promise<string | undefined> {
+        const secrets = Globals.extensionContext.secrets;
+        let secret = await secrets.get(key);
+        if (!secret) {
+            secret = await vscode.window.showInputBox({
+                title: `Enter your ${name} (${help})`,
+                password: true
+            });
+            if (secret) {
+                await secrets.store(key, secret);
+            }
         }
+        return secret;
     }
 
-    return openAiKey;
+    static async storeSecret(key: string, value: string) {
+        const secrets = Globals.extensionContext.secrets;
+        await secrets.store(key, value);
+    }
+
+    static async removeKey(key: string) {
+        const secrets = Globals.extensionContext.secrets;
+        await secrets.delete(key);
+    }
 }

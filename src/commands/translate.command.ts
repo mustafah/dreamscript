@@ -2,7 +2,8 @@ import { llm } from "./llm";
 import { translateCommandTemplate } from "./translate.template";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { getKey } from "./keys";
+import { Keys } from "./keys";
+import { Configs } from "./configs";
 
 export async function translate() {
     const maxLength: number = 160;
@@ -48,18 +49,19 @@ export async function translate() {
 
     const content = result.join('\n');
 
-	const question = translateCommandTemplate({content, language: 'Arabic'});
+    const language = await Configs.getConfig('translationLanguage', 'Enter your preferred translation language name (e.g., French, Arabic, Spanish !)');
+	const question = translateCommandTemplate({content, language});
 
-    const openAiKey = await getKey();
+    const backendChoice = await Configs.getConfig('llmBackend');
 
     await vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
-        title: '🇺🇳 Translating...',
+        title: `🇺🇳 Translating using ${backendChoice}...`,
         cancellable: false
     }, async (progress) => {
         // Perform the translation
         try {
-            const response = await llm(question, openAiKey);
+            const response = await llm(question);
             fs.writeFileSync(dreamFilePath, response);
 
         } catch (error) {
