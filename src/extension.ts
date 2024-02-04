@@ -3,6 +3,7 @@ import { branch } from './commands/branch.command';
 import { pasteImage } from './commands/paste.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
 import { Globals } from './globals';
+import { translate } from './commands/translate.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -25,4 +26,9 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(pasteImageDisposable);
 	// </PasteImage>
     
+    // <Translate>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.translate', async () => {
+        await translate();
+    }));
+	// </Translate>
 }

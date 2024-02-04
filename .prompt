@@ -3,12 +3,15 @@ progressive=False
 chunk="None"
 question="
 
-    # We want when user paste image, to have snap shot of the dream file beside the image file,
-    we want for ' Original Source ' in the menu click to show that created file
+    we want store the OPENAI_KEY store in secret place like vscode settings for example!
+    and if we try to retreive it we should prompt user for it
 
 "
 
 file_list="
+
+    /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
+    /Users/mustafah/Projects/dreamscript/src/commands/translate.command.ts
 
     # /Users/mustafah/Projects/dreamscript/playground.js
     # /Users/mustafah/Projects/dreams-origins/src/components/lang/monaco-dreamscript.js
@@ -19,7 +22,7 @@ file_list="
     # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
     # /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
     # /Users/mustafah/Projects/dreamscript/src/extension.ts
-    /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
+    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/regex.ts
     # /Users/mustafah/Projects/dreamscript/tsconfig.json
     # /Users/mustafah/Projects/dreamscript/scene1.dream
