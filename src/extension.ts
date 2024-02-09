@@ -7,6 +7,9 @@ import { translate } from './commands/translate.command';
 import { emojify } from './commands/emojify.command';
 import { promptify } from './commands/promptify.command';
 import { Keys } from './commands/keys';
+import { selectLLMBackend } from './commands/selectLLMBackend';
+import { compileCommand } from './commands/compile.command';
+import { formatCommand } from './commands/format.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -53,4 +56,22 @@ export async function activate(context: vscode.ExtensionContext) {
         await Keys.removeKey('OPENAI_API_KEY');
     }));
 	// </ClearKeys>
+
+    // <LLM Backend>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.selectLLMBackend', async () => {
+        selectLLMBackend();
+    }));
+    // </LLM Backend>
+
+    // <Compile>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.compile', async () => {
+        compileCommand();
+    }));
+    // </Compile>
+
+    // <Format>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.format', async () => {
+        formatCommand();
+    }));
+    // </Format>
 }

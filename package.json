@@ -1,6 +1,6 @@
 {
 	"name": "dreamscript",
-	"description": "Dreamscript - Basic Prompt scripting",
+	"description": "Dreamscript - AI art prompt scripting with versioning",
 	"version": "0.0.1",
 	"publisher": "mustafah",
 	"private": true,
@@ -88,12 +88,19 @@
 				"title": "✨ Dreamscript: Clear API keys"
 			},
 			{
-				"command": "dreamscript.setBackendOpenAI",
-				"title": "Set LLM Backend to OpenAI"
+				"command": "dreamscript.selectLLMBackend",
+				"title": "LLM",
+				"category": "DreamScript"
 			},
 			{
-				"command": "dreamscript.setBackendOllamaMistral",
-				"title": "Set LLM Backend to Ollama Mistral"
+				"command": "dreamscript.compile",
+				"title": "Compile",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.format",
+				"title": "Format",
+				"category": "DreamScript"
 			}
 		],
 		"menus": {
@@ -122,6 +129,21 @@
 					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.promptify",
 					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == dreamscript",
+					"command": "dreamscript.selectLLMBackend",
+					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == dreamscript",
+					"command": "dreamscript.compile",
+					"group": "navigation"
+				},
+				{
+					"when": "resourceLangId == dreamscript",
+					"command": "dreamscript.format",
+					"group": "navigation"
 				}
 			]
 		},
@@ -129,7 +151,7 @@
 			"properties": {
 				"dreamscript.llmBackend": {
 					"type": "string",
-					"enum": ["OpenAI", "Ollama Mistral"],
+					"enum": ["OpenAI", "Ollama Mistral (Expiremental)"],
 					"default": "OpenAI",
 					"description": "Select the LLM to use:"
 				},

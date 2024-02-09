@@ -7,7 +7,7 @@ export async function llm(question: string) {
     console.log('Dreamscript.Prompt ?', question);
     const backendChoice = await Configs.getConfig('llmBackend');
 
-    if (backendChoice === 'Ollama Mistral') {
+    if (backendChoice.toLowerCase().includes('mistral')) {
         // Use Ollama Mistral
         const data = JSON.stringify({ "model": "mistral", "prompt": question, "options": {"temperature": 0}, "stream": false });
         const config = {

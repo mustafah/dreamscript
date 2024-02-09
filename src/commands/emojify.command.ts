@@ -2,12 +2,10 @@ import { llm } from "./llm";
 import { translateCommandTemplate } from "./translate.template";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { Keys } from "./keys";
 import { Configs } from "./configs";
 import { emojifyCommandTemplate } from "./emojify.template";
 
 export async function emojify() {
-    const maxLength: number = 160;
 
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
