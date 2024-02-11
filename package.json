@@ -64,52 +64,53 @@
 		},
 		"commands": [
 			{
-				"command": "dreamscript.translate",
-				"title": "Translate"
-			},
-			{
-				"command": "dreamscript.branch",
-				"title": "Branch"
-			},
-			{
-				"command": "dreamscript.pasteImage",
-				"title": "Paste Image"
-			},
-			{
-				"command": "dreamscript.emojify",
-				"title": "Emojify"
-			},
-			{
-				"command": "dreamscript.promptify",
-				"title": "Promptify"
-			},
-			{
-				"command": "dreamscript.clearKeys",
-				"title": "✨ Dreamscript: Clear API keys"
-			},
-			{
-				"command": "dreamscript.selectLLMBackend",
-				"title": "LLM",
+				"command": "dreamscript.compile",
+				"title": "🧑‍💻 Compile",
 				"category": "DreamScript"
 			},
 			{
-				"command": "dreamscript.compile",
-				"title": "Compile",
+				"command": "dreamscript.branch",
+				"title": "🌳 Branch",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.pasteImage",
+				"title": "🖼️📋 Paste Image",
 				"category": "DreamScript"
 			},
 			{
 				"command": "dreamscript.format",
-				"title": "Format",
+				"title": "📐🖌️ Format",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.translate",
+				"title": "🇺🇳 Translate",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.emojify",
+				"title": "☺️ Emojify",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.promptify",
+				"title": "💡 Promptify",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.clearKeys",
+				"title": "✨ Clear API keys",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.selectLLMBackend",
+				"title": "📖 Dreamscript: LLM",
 				"category": "DreamScript"
 			}
 		],
 		"menus": {
 			"editor/title": [
-				{
-					"when": "resourceLangId == dreamscript",
-					"command": "dreamscript.translate",
-					"group": "navigation"
-				},
 				{
 					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.branch",
@@ -122,27 +123,7 @@
 				},
 				{
 					"when": "resourceLangId == dreamscript",
-					"command": "dreamscript.emojify",
-					"group": "navigation"
-				},
-				{
-					"when": "resourceLangId == dreamscript",
-					"command": "dreamscript.promptify",
-					"group": "navigation"
-				},
-				{
-					"when": "resourceLangId == dreamscript",
-					"command": "dreamscript.selectLLMBackend",
-					"group": "navigation"
-				},
-				{
-					"when": "resourceLangId == dreamscript",
 					"command": "dreamscript.compile",
-					"group": "navigation"
-				},
-				{
-					"when": "resourceLangId == dreamscript",
-					"command": "dreamscript.format",
 					"group": "navigation"
 				}
 			]

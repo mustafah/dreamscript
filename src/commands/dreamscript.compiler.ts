@@ -5,7 +5,7 @@ import * as path from 'path';
 class DreamScriptCompiler {
     private promptLines: string[] = [];
     private variables: any = {};
-
+    
     constructor(private input: string) {}
 
     compile() {

@@ -3,16 +3,16 @@ progressive=False
 chunk="None"
 question="
 
-    file path of the import statement should be relative to the project workspace or it should be absolute
+    how to add icon to editor/title commands with the text
 
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/commands/dreamscript.compiler.ts
-    /Users/mustafah/Projects/dreamscript/src/commands/compiler/import.ts
-
+    # /Users/mustafah/Projects/dreamscript/src/commands/dreamscript.compiler.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/compile.command.ts
+    
+    # /Users/mustafah/Projects/dreamscript/src/commands/compiler/import.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/keys.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/promptify.command.ts
 
@@ -25,7 +25,7 @@ file_list="
     # /Users/mustafah/Projects/dreams-origins/src/components/lang/monaco-dreamscript.js
     # /Users/mustafah/Projects/dreamscript/language-configuration.json
     # /Users/mustafah/Projects/dreamscript/dreamscript.tmLanguage.json
-    # /Users/mustafah/Projects/dreamscript/package.json
+    /Users/mustafah/Projects/dreamscript/package.json
 
     # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
     # /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs

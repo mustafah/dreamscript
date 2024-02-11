@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import { formatCommandTemplate } from './format.template';
+import { Configs } from './configs';
+import { llm } from './llm';
 
 export async function formatCommand() {
     const editor = vscode.window.activeTextEditor;
@@ -8,9 +11,24 @@ export async function formatCommand() {
 		const dreamFilePath = editor.document.uri.fsPath;
 		const content = fs.readFileSync(dreamFilePath, 'utf8');
 
-        await vscode.env.clipboard.writeText(content);
+        const question = formatCommandTemplate({content});
         
-        vscode.window.showInformationMessage('Compiled prompt copied to clipboard !');
+        const backendChoice = await Configs.getConfig('llmBackend');
+
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: `📝💡 Formatting using ${backendChoice}...`,
+            cancellable: false
+        }, async (progress) => {
+            // Perform the translation
+            try {
+                const response = await llm(question);
+                fs.writeFileSync(dreamFilePath, response);
+    
+            } catch (error) {
+                vscode.window.showErrorMessage(`Error during emojify: ${error}`);
+            }
+        });
     } else {
         vscode.window.showErrorMessage('No active editor found');
     }
