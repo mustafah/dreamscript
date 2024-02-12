@@ -1,16 +1,17 @@
 {
 	"name": "dreamscript",
-	"description": "Dreamscript - AI art prompt scripting with versioning",
-	"version": "0.0.1",
+	"description": "Dreamscript - AI Art Prompt Branching & Scripting",
+	"version": "1.0.0",
 	"publisher": "mustafah",
 	"private": true,
 	"license": "MIT",
+	"icon": "media/dreamscript-icon.jpg",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mustafah/dreamscript"
 	},
 	"engines": {
-		"vscode": "^1.74.0"
+		"vscode": "^1.86.0"
 	},
 	"extensionKind": [
 		"ui",
