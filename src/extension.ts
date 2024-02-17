@@ -10,6 +10,7 @@ import { Keys } from './commands/keys';
 import { selectLLMBackend } from './commands/selectLLMBackend';
 import { compileCommand } from './commands/compile.command';
 import { formatCommand } from './commands/format.command';
+import { exportCommand } from './commands/export.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -74,4 +75,10 @@ export async function activate(context: vscode.ExtensionContext) {
         formatCommand();
     }));
     // </Format>
+
+    // <Export>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.export', async () => {
+        exportCommand();
+    }));
+    // </Export>
 }

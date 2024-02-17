@@ -17,7 +17,7 @@ class DreamScriptCompiler {
                 this.promptLines.push(line);
             }
         }
-        this.variables.prompt = this.promptLines.join('\n');
+        this.variables.prompt = this.promptLines.join(',\n');
         return this.variables;
     }
 

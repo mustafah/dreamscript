@@ -1,7 +1,7 @@
 {
 	"name": "dreamscript",
 	"description": "Dreamscript - AI Art Prompt Branching & Scripting",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"publisher": "mustafah",
 	"private": true,
 	"license": "MIT",
@@ -106,7 +106,12 @@
 			},
 			{
 				"command": "dreamscript.selectLLMBackend",
-				"title": "📖 Dreamscript: LLM",
+				"title": "📖 LLM",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.export",
+				"title": "📖 Export",
 				"category": "DreamScript"
 			}
 		],
@@ -133,7 +138,10 @@
 			"properties": {
 				"dreamscript.llmBackend": {
 					"type": "string",
-					"enum": ["OpenAI", "Ollama Mistral (Expiremental)"],
+					"enum": [
+						"OpenAI",
+						"Ollama Mistral (Expiremental)"
+					],
 					"default": "OpenAI",
 					"description": "Select the LLM to use:"
 				},
@@ -173,10 +181,10 @@
 		"typescript": "^5.3.2"
 	},
 	"dependencies": {
-		"axios": "^1.6.5",
+		"archiver": "^6.0.1",
+		"form-data": "^4.0.0",
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",
-		"node-fetch": "^3.3.2",
 		"save-clipboard-image": "^1.0.0"
 	}
 }
