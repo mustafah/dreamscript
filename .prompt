@@ -3,8 +3,9 @@ progressive=False
 chunk="None"
 question="
 
-    can you use this raw method you just suggested instead of using catbox.moe library ?
-
+    in the blob generated url we want replace 'https://dreamscripts.blob.core.windows.net' with 
+    'https://share.dreamscript.art'
+   
 "
 
 file_list="
