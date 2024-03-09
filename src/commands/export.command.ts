@@ -38,7 +38,9 @@ export async function exportCommand() {
 
     const AZURE_STORAGE_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=dreamscripts;AccountKey=FHTi793Gyo/vq2WQs/bPDicA3yM0ynil3o6ZvNaNjgEv+BoQZHzyuomnm3QzEIXpRtAVT4tM+7Th+AStpmAG7Q==;EndpointSuffix=core.windows.net";
 
-    const username = await getUsername();
+    // const username = await getUsername();
+    const baseName = sanitizeWorkspaceName(workspaceFolder.name);
+    const namespace = baseName;
     output.on('close', async function () {
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
@@ -46,10 +48,10 @@ export async function exportCommand() {
             cancellable: false
         }, async (progress) => {
             try {
-                const containerClient = await getContainerClientFromUser(AZURE_STORAGE_CONNECTION_STRING, username);
+                const containerClient = await getContainerClientFromUser(AZURE_STORAGE_CONNECTION_STRING, namespace);
 
-                const nextBlobNumber = await getNextBlobNumber(containerClient);
-                const blobName = `0x${nextBlobNumber}/${sanitizeWorkspaceName(workspaceFolder.name)}`;
+                const nextBlobNumber = await getNextBlobNumber(containerClient, baseName);
+                const blobName = `${baseName}x${nextBlobNumber}`;
                 const blockBlobClient = containerClient.getBlockBlobClient(`${blobName}`);
                 
                 // Set the Content-Disposition header to suggest a .zip file name
@@ -85,7 +87,7 @@ export async function exportCommand() {
 
 }
 
-async function getNextBlobNumber(containerClient) {
+async function getNextBlobNumber2(containerClient) {
     let maxNumber = -1;
     const regex = /__v(\d+)/; // Regular expression to match '__v' followed by digits
     for await (const blob of containerClient.listBlobsFlat()) {
@@ -98,6 +100,22 @@ async function getNextBlobNumber(containerClient) {
     }
     return maxNumber + 1;
 }
+
+async function getNextBlobNumber(containerClient, baseName: string): Promise<number> {
+    let maxNumber = -1;
+    const regex = new RegExp(`^${baseName}\\[(\\d+)\\]\\.zip$`);
+
+    for await (const blob of containerClient.listBlobsFlat()) {
+        const match = blob.name.match(regex);
+        if (match) {
+            const versionNumber = parseInt(match[1], 10);
+            maxNumber = Math.max(maxNumber, versionNumber);
+        }
+    }
+
+    return maxNumber + 1;
+}
+
 
 async function getContainerClient(connectionString, containerName) {
     try {
