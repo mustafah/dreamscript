@@ -3,42 +3,12 @@ progressive=False
 chunk="None"
 question="
 
-    we want getNextBlobNumber to be optimized and search for the files with the same name and increase version number,
-    so if our baseName is dreamscriptsampleproject,
-    first blob file name should be = dreamscriptsampleproject.zip
-    second blob file name should be = dreamscriptsampleproject[1]
-    third blob file name should be = dreamscriptsampleproject[2]
-    fourth blob file name should be = dreamscriptsampleproject[3]
+    add a method called processUncompilableLine, for lines that start with `~` that just return nothing 
    
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/commands/export.command.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/dreamscript.compiler.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/compile.command.ts
-    
-    # /Users/mustafah/Projects/dreamscript/src/commands/compiler/import.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/keys.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/promptify.command.ts
-
-    # /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
-    # /Users/mustafah/Projects/dreamscript/playground
-
-    # /Users/mustafah/Projects/dreamscript/src/commands/translate.command.ts
-
-    # /Users/mustafah/Projects/dreamscript/playground.js
-    # /Users/mustafah/Projects/dreams-origins/src/components/lang/monaco-dreamscript.js
-    # /Users/mustafah/Projects/dreamscript/language-configuration.json
-    # /Users/mustafah/Projects/dreamscript/dreamscript.tmLanguage.json
-    # /Users/mustafah/Projects/dreamscript/package.json
-
-    # /Users/mustafah/Projects/dreamscript/src/commands/images.panel.ts
-    # /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
-    # /Users/mustafah/Projects/dreamscript/src/extension.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/paste.command.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/regex.ts
-    # /Users/mustafah/Projects/dreamscript/tsconfig.json
-    # /Users/mustafah/Projects/dreamscript/scene1.dream
+    C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
 
 "
