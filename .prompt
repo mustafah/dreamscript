@@ -3,8 +3,8 @@ progressive=False
 chunk="None"
 question="
 
-    add a method called processUncompilableLine, for lines that start with `~` that just return nothing 
-   
+    please before 'this.promptLines.push(line)' removing commas at the end of this line
+    
 "
 
 file_list="

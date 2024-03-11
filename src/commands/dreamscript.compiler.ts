@@ -12,9 +12,11 @@ class DreamScriptCompiler {
         const lines = this.input.split('\n');
         for (let line of lines) {
             line = line.trim();
-            line = line.replace(/\/\/.*/, '');
             if (!this.processLine(line)) {
-                this.promptLines.push(line);
+                if (line !== '') {
+                    line = line.replace(/,$/, ''); // Remove trailing commas
+                    this.promptLines.push(line);
+                }
             }
         }
         this.variables.prompt = this.promptLines.join(',\n');
@@ -22,7 +24,7 @@ class DreamScriptCompiler {
     }
 
     private processLine(line: string): boolean {
-        return this.processImportLine(line) || this.processAssignmentLine(line);
+        return this.processCommentLine(line) || this.processImportLine(line) || this.processAssignmentLine(line) || this.processUncompilableLine(line);
     }
 
     private processImportLine(line: string): boolean {
@@ -66,6 +68,20 @@ class DreamScriptCompiler {
         }
         return false;
     }
+
+    private processCommentLine(line: string): boolean {
+        if (line.startsWith('//')) {
+          return true;
+        }
+        return false;
+      }
+
+    private processUncompilableLine(line: string): boolean {
+        if (line.startsWith('~')) {
+          return true;
+        }
+        return false;
+      }
 }
 
 export default DreamScriptCompiler;
