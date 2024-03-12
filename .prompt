@@ -3,13 +3,15 @@ progressive=False
 chunk="None"
 question="
 
-    TypeError: s3.putObjet is not a function
+    what's wrong here
+    Error Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: Host: example-space.dreamscriptstorage.sfo2.digitaloceanspaces.com. is not in the cert's altnames: DNS:*.sfo2.digitaloceanspaces.com, DNS:sfo2.digitaloceanspaces.com
     
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/digitalocean2.js
+    /Users/mustafah/Projects/dreamscript/digitalocean3.mjs
+    # /Users/mustafah/Projects/dreamscript/digitalocean2.js
     # C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
 
 "
