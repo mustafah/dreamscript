@@ -3,12 +3,13 @@ progressive=False
 chunk="None"
 question="
 
-    please before 'this.promptLines.push(line)' removing commas at the end of this line
+    TypeError: s3.putObjet is not a function
     
 "
 
 file_list="
 
-    C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
+    /Users/mustafah/Projects/dreamscript/digitalocean2.js
+    # C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
 
 "

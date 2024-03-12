@@ -183,6 +183,7 @@
 	"dependencies": {
 		"@azure/storage-blob": "^12.17.0",
 		"archiver": "^6.0.1",
+		"aws-sdk": "^2.717.0",
 		"form-data": "^4.0.0",
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",

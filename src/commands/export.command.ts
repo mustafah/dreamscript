@@ -51,8 +51,7 @@ export async function exportCommand() {
                 const containerClient = await getContainerClientFromUser(AZURE_STORAGE_CONNECTION_STRING, namespace);
 
                 const nextBlobNumber = await getNextBlobNumber(containerClient, baseName);
-                const blobName = `${baseName}x${nextBlobNumber}`;
-                const blockBlobClient = containerClient.getBlockBlobClient(`${blobName}`);
+                const blockBlobClient = containerClient.getBlockBlobClient(`${baseName}x${nextBlobNumber}.zip`);
                 
                 // Set the Content-Disposition header to suggest a .zip file name
                 const contentSettings: BlobHTTPHeaders = {
@@ -87,23 +86,9 @@ export async function exportCommand() {
 
 }
 
-async function getNextBlobNumber2(containerClient) {
-    let maxNumber = -1;
-    const regex = /__v(\d+)/; // Regular expression to match '__v' followed by digits
-    for await (const blob of containerClient.listBlobsFlat()) {
-        console.log(blob.name);
-        const match = blob.name.match(regex); // Check if the blob name matches the pattern
-        if (match) {
-            const versionNumber = parseInt(match[1], 10); // Extract the digits after '__v'
-            maxNumber = Math.max(maxNumber, versionNumber);
-        }
-    }
-    return maxNumber + 1;
-}
-
 async function getNextBlobNumber(containerClient, baseName: string): Promise<number> {
     let maxNumber = -1;
-    const regex = new RegExp(`^${baseName}\\[(\\d+)\\]\\.zip$`);
+    const regex = new RegExp(`^${baseName}x\\d+)\\.zip$`);
 
     for await (const blob of containerClient.listBlobsFlat()) {
         const match = blob.name.match(regex);
