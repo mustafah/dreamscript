@@ -3,14 +3,22 @@ progressive=False
 chunk="None"
 question="
 
-    what's wrong here
-    Error Error [ERR_TLS_CERT_ALTNAME_INVALID]: Hostname/IP does not match certificate's altnames: Host: example-space.dreamscriptstorage.sfo2.digitaloceanspaces.com. is not in the cert's altnames: DNS:*.sfo2.digitaloceanspaces.com, DNS:sfo2.digitaloceanspaces.com
+(node:81335) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Error: TypeError: The "cb" argument must be of type function. Received an instance of Object
+    at maybeCallback (node:fs:180:3)
+    at Object.readFile (node:fs:371:14)
+    at uploadFile (/Users/mustafah/Projects/dreamscript/src/upload.ts:20:34)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5) {
+  code: 'ERR_INVALID_ARG_TYPE'
+}
     
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/digitalocean3.mjs
+    /Users/mustafah/Projects/dreamscript/src/upload.ts
+    # /Users/mustafah/Projects/dreamscript/digitalocean3.mjs
     # /Users/mustafah/Projects/dreamscript/digitalocean2.js
     # C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
 
