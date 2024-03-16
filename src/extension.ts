@@ -11,8 +11,11 @@ import { selectLLMBackend } from './commands/selectLLMBackend';
 import { compileCommand } from './commands/compile.command';
 import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
+import { uploadMain } from './upload';
 
 export async function activate(context: vscode.ExtensionContext) {
+
+    await uploadMain();
 
 	// <ImagesPanel>
     Globals.extensionContext = context;

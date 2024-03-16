@@ -3,15 +3,7 @@ progressive=False
 chunk="None"
 question="
 
-(node:81335) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-Error: TypeError: The "cb" argument must be of type function. Received an instance of Object
-    at maybeCallback (node:fs:180:3)
-    at Object.readFile (node:fs:371:14)
-    at uploadFile (/Users/mustafah/Projects/dreamscript/src/upload.ts:20:34)
-    at processTicksAndRejections (node:internal/process/task_queues:95:5) {
-  code: 'ERR_INVALID_ARG_TYPE'
-}
+    We want uploadFile to never overwrite files if it's already there
     
 "
 
