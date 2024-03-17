@@ -3,7 +3,8 @@ progressive=False
 chunk="None"
 question="
 
-    We want uploadFile to never overwrite files if it's already there
+    We want uploadFile to never overwrite files if it's already there,
+    ThrowOnDuplicate parameter did not work
     
 "
 

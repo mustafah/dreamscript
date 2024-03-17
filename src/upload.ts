@@ -40,22 +40,19 @@ async function uploadFile(filePath: string, bucketName: string) {
       Bucket: bucketName,
       Key: fileName,
       Body: fileContent,
-      ACL: "private",
-      Metadata: {
-        "x-amz-meta-my-key": "your-value",
-      },
+      ACL: "public",
     };
 
     const data = await s3Client.send(new PutObjectCommand(params as any));
     console.log("Successfully uploaded object:", bucketName + "/" + fileName);
-  } catch (err) {
+  } catch (err) { 
     console.log("Error:", err);
   }
 }
 
 
 function getFileName(filePath: string) {
-	return path.basename(filePath, '.zip');
+	return path.basename(filePath, '.zip').toLowerCase();
 }
 
 let _s3Client = null;
@@ -77,9 +74,55 @@ export async function uploadMain() {
 	// Usage example
 	const bucketName = "dreamscriptstorage";
 	const filePath = '/Users/mustafah/Downloads/mydreamproject.zip';
-	const fileName = getFileName(filePath);
-	// const list = await listObjects(bucketName, fileName);
+	let fileName = getFileName(filePath);
+	const list = await listObjects(bucketName, fileName);
 	// console.log(list);
-	const filePath2 = "/Users/mustafah/Downloads/mydreamprojectxOIO.zip";
-	uploadFile(filePath2, bucketName);
+	fileName = list[0].toLowerCase();
+	// const filePath2 = "/Users/mustafah/Downloads/mydreamprojectxOIO.zip";
+	// uploadFile(filePath2, bucketName);
+	const lastXIndex = fileName.lastIndexOf('x');
+	let versionNumber: any = 0;
+	let binaryString;
+	if (lastXIndex !== -1) {
+		binaryString = fileName.substring(lastXIndex + 1); // Extract the binary string from the URL
+		versionNumber = decodeFromOldLatin(binaryString);
+		// versionNumber = binaryString.replace(/i/g, '1').replace(/o/g, '0'); // Convert 'I' to '1' and 'O' to '0'
+		// versionNumber = parseInt(versionNumber, 2);
+		fileName = fileName.substring(0, lastXIndex);
+		if (!versionNumber) return '';
+	}
+	versionNumber += 1;
+
+	binaryString = encodeToOldLatin(versionNumber);
+	return {versionNumber};
+}
+
+function encodeToOldLatin(integer, minLength = 3) {
+    const base = 2; // Base of the encoding system
+    const characters = ['O', 'I']; // Characters used for encoding
+
+    let result = '';
+    do {
+        result = characters[integer % base] + result;
+        integer = Math.floor(integer / base);
+    } while (integer > 0);
+
+    // Pad with leading 'O's if necessary
+    while (result.length < minLength) {
+        result = 'O' + result;
+    }
+
+    return result;
+}
+
+function decodeFromOldLatin(str) {
+    const base = 2; // Base of the encoding system
+    const characters = ['O', 'I']; // Characters used for encoding
+
+    let result = 0;
+    for (let i = 0; i < str.length; i++) {
+        result = result * base + characters.indexOf(str[i]);
+    }
+
+    return result;
 }
