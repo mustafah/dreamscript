@@ -45,7 +45,7 @@ async function uploadFile(
       Bucket: bucketName,
       Key: targetFileName,
       Body: fileContent,
-      ACL: "public-read" // or private
+      ACL: "public-read", // or private
     };
 
     const data = await s3Client.send(new PutObjectCommand(params as any));
@@ -80,16 +80,19 @@ export async function uploadMain() {
   const filePath = "/Users/mustafah/Downloads/mydreamproject.zip";
   let fileName = getFileName(filePath);
   const list = await listObjects(bucketName, fileName);
-  fileName = list[0];
-  const lastXIndex = fileName.lastIndexOf("x");
-  let versionNumber: any = 0;
+
   let binaryString;
-  if (lastXIndex !== -1) {
-    binaryString = fileName.substring(lastXIndex + 1); // Extract the binary string from the URL
-    versionNumber = decodeFromOldLatin(binaryString);
-    // versionNumber = binaryString.replace(/i/g, '1').replace(/o/g, '0'); // Convert 'I' to '1' and 'O' to '0'
-    // versionNumber = parseInt(versionNumber, 2);
-    fileName = fileName.substring(0, lastXIndex);
+  let versionNumber: any = -1;
+  if (list.length > 0) {
+    fileName = list[0];
+    const lastXIndex = fileName?.lastIndexOf("x") || -1;
+
+    if (lastXIndex !== -1) {
+      binaryString = fileName.substring(lastXIndex + 1); // Extract the binary string from the URL
+      versionNumber = decodeFromOldLatin(binaryString);
+
+      fileName = fileName.substring(0, lastXIndex);
+    }
   }
   versionNumber += 1;
 
