@@ -88,7 +88,7 @@ export async function uploadMain() {
     const lastXIndex = fileName?.lastIndexOf("x") || -1;
 
     if (lastXIndex !== -1) {
-      binaryString = fileName.substring(lastXIndex + 1); // Extract the binary string from the URL
+      binaryString = fileName.substring(lastXIndex + 1, fileName.length - 4); // Extract the binary string from the URL, and remove the last 4 characters which indicate the file extension
       versionNumber = decodeFromOldLatin(binaryString);
 
       fileName = fileName.substring(0, lastXIndex);
