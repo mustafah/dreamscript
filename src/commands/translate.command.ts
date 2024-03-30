@@ -5,6 +5,8 @@ import * as fs from 'fs';
 import { Keys } from "./keys";
 import { Configs } from "./configs";
 
+// https://github.com/topics/google-translate-free-api
+
 export async function translate() {
     const maxLength: number = 160;
 
