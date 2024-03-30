@@ -74,11 +74,11 @@ async function getS3Client() {
   return _s3Client;
 }
 
-export async function uploadMain() {
+export async function upload(projectName, filePath) {
   // Usage example
   const bucketName = "dreamscriptstorage";
-  const filePath = "/Users/mustafah/Downloads/mydreamproject.zip";
-  let fileName = getFileName(filePath);
+  // const filePath = "/Users/mustafah/Downloads/mydreamproject.zip";
+  let fileName = projectName; // getFileName(filePath);
   const list = await listObjects(bucketName, fileName);
 
   let binaryString;
@@ -97,9 +97,11 @@ export async function uploadMain() {
   versionNumber += 1;
 
   binaryString = encodeToOldLatin(versionNumber);
-  const newFileName = `${fileName}x${binaryString}.zip`;
+  const newFileBaseName = `${fileName}x${binaryString}`;
+  const newFileName = `${newFileBaseName}.zip`;
   await uploadFile(filePath, newFileName, bucketName);
-  const X = 6;
+  
+  return `https://dreamscript.works/${newFileBaseName}`;
 }
 
 function encodeToOldLatin(integer, minLength = 3) {

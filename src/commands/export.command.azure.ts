@@ -2,28 +2,17 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as archiver from 'archiver';
-import * as archiverZipEncrypted from 'archiver-zip-encrypted';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { v4 as uuidv4 } from 'uuid';
 import { BlobHTTPHeaders } from '@azure/storage-blob';
-import { upload } from '../upload';
 
-export async function exportCommand(password = false) {
+export async function exportAzureCommand() {
+
     // for (let i = 0; i <= 20; i++) {
     //     const encodedString = encodeToOldLatin(i);
     //     console.log(`Integer: ${i}, Encoded: ${encodedString}, Decoded: ${decodeFromOldLatin(encodedString)}`);
     // }
-    let enteredPassword;
-    if (password) {
-        enteredPassword = await vscode.window.showInputBox({
-            prompt: "Enter password",
-            password: true,
-        });
-        if (!password) {
-            vscode.window.showErrorMessage("No password entered");
-            return;
-        }
-    }
+
     const workspaceFolder = vscode.workspace.workspaceFolders[0];
     if (!workspaceFolder) {
         vscode.window.showErrorMessage("No workspace folder open");
@@ -41,21 +30,17 @@ export async function exportCommand(password = false) {
     }, null, 2));
 
     // Setting up the zip file
-    let zip;
-    if(password) {
-        archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
-        zip = archiver.create('zip-encrypted', {zlib: {level: 9}, encryptionMethod: 'aes256', password: enteredPassword});
-    } else {
-        zip = archiver('zip', { zlib: { level: 9 }});
-    }
-    
-
+    const zip = archiver('zip', { zlib: { level: 9 } });
     const formattedDate = new Date().toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }).replace(/ /g, '').replace(/:/g, '_').replace(/,/g, '__');
     const zipFileName = `${workspaceFolder.name}_${formattedDate}.dreams.zip`;
-    const projectName = sanitizeWorkspaceName(workspaceFolder.name);
     const zipFilePath = path.join(workspaceFolder.uri.fsPath, '..', zipFileName);
     const output = fs.createWriteStream(zipFilePath);
 
+    const AZURE_STORAGE_CONNECTION_STRING = "";
+
+    // const username = await getUsername();
+    const baseName = sanitizeWorkspaceName(workspaceFolder.name);
+    const namespace = baseName;
     output.on('close', async function () {
         vscode.window.withProgress({
             location: vscode.ProgressLocation.Notification,
@@ -63,11 +48,27 @@ export async function exportCommand(password = false) {
             cancellable: false
         }, async (progress) => {
             try {
-                
-                const shareURL = await upload(projectName, zipFilePath);
+                const containerClient = await getContainerClientFromUser(AZURE_STORAGE_CONNECTION_STRING, namespace);
 
-                await vscode.env.clipboard.writeText(shareURL);
-                vscode.window.showInformationMessage(`Exported to ${shareURL}, URL copied to clipboard`);
+                const nextBlobNumber = await getNextBlobNumber(containerClient, baseName);
+                const blockBlobClient = containerClient.getBlockBlobClient(`${baseName}x${nextBlobNumber}.zip`);
+                
+                // Set the Content-Disposition header to suggest a .zip file name
+                const contentSettings: BlobHTTPHeaders = {
+                    blobContentType: "application/zip",
+                    // blobContentDisposition: `attachment; filename=${zipFileName}`
+                };
+                // await blockBlobClient.uploadFile(zipFilePath);
+                await blockBlobClient.uploadFile(zipFilePath, {
+                    blobHTTPHeaders: contentSettings
+                });
+                const blobUrl = blockBlobClient.url;
+                    
+                // Replace the base URL with your custom domain
+                const customDomain = "https://dreamscript.works";
+                const customBlobUrl = blobUrl.replace(/https:\/\/[^/]+/, customDomain);
+                await vscode.env.clipboard.writeText(customBlobUrl);
+                vscode.window.showInformationMessage(`Exported to ${blobUrl}, URL copied to clipboard`);
             } catch (err) {
                 vscode.window.showErrorMessage(`Error uploading file to Dreamscript repo: ${err}`);
             }
@@ -82,6 +83,7 @@ export async function exportCommand(password = false) {
     zip.pipe(output);
     zip.directory(workspaceFolder.uri.fsPath, false);
     zip.finalize();
+
 }
 
 async function getNextBlobNumber(containerClient, baseName: string): Promise<number> {
