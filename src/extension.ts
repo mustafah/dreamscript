@@ -11,7 +11,6 @@ import { selectLLMBackend } from './commands/selectLLMBackend';
 import { compileCommand } from './commands/compile.command';
 import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
-import { uploadMain } from './upload';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -82,7 +81,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // <Export>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.export', async () => {
-        exportCommand();
+        exportCommand(false);
+    }));
+    // </Export>
+
+    // <Export>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.exportWithPassword', async () => {
+        exportCommand(true);
     }));
     // </Export>
 }
