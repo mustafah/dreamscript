@@ -3,13 +3,14 @@ progressive=False
 chunk="None"
 question="
 
-    please before 'this.promptLines.push(line)' removing commas at the end of this line
-    
+    JsGoogleTranslateFree is imported as undefined although I installed it !
+
 "
 
 file_list="
 
-    C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
+    C:\Users\mohamus03\Projects\dreamscript\src\commands\translate.command.ts
+    C:\Users\mohamus03\Projects\dreamscript\package.json
 
 "
 

@@ -3,7 +3,7 @@ import { branch } from './commands/branch.command';
 import { pasteImage } from './commands/paste.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
 import { Globals } from './globals';
-import { translate } from './commands/translate.command';
+import { translateCommand, translateGoogle } from './commands/translate.command';
 import { emojify } from './commands/emojify.command';
 import { promptify } from './commands/promptify.command';
 import { Keys } from './commands/keys';
@@ -15,7 +15,8 @@ import { uploadMain } from './upload';
 
 export async function activate(context: vscode.ExtensionContext) {
 
-    await uploadMain();
+    await translateGoogle();
+    // await uploadMain();
 
 	// <ImagesPanel>
     Globals.extensionContext = context;
@@ -39,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
     
     // <Translate>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.translate', async () => {
-        await translate();
+        await translateCommand();
     }));
 	// </Translate>
 

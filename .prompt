@@ -3,32 +3,13 @@ progressive=False
 chunk="None"
 question="
 
-    Make a typescript function that takes a string like in sample-params.txt and return array of strings like what in sample-params.dream
+    JsGoogleTranslateFree is imported as undefined although I installed it !
 
-    You should spot the following keys from the list, and the values will be what is between them
-    
-    Input Resolution
-Created
-Pipeline
-Seed
-Preset
-PhotoReal
-Model
-Init Strength
-RAW Mode
-    
 "
 
 file_list="
 
-    sample-params.dream
-    sample-params.txt
-    # C:\Users\mohamus03\Projects\dreamscript\sample-params.txt
-    # C:\Users\mohamus03\Projects\dreamscript\sample-params.dream
-    # /Users/mustafah/Projects/dreamscript/src/upload.ts
-    # /Users/mustafah/Projects/dreamscript/src/upload.ts
-    # /Users/mustafah/Projects/dreamscript/digitalocean3.mjs
-    # /Users/mustafah/Projects/dreamscript/digitalocean2.js
-    # C:\Users\mohamus03\Projects\dreamscript\src\commands\dreamscript.compiler.ts
+    C:\Users\mohamus03\Projects\dreamscript\src\commands\translate.command.ts
+    C:\Users\mohamus03\Projects\dreamscript\package.json
 
 "

@@ -182,6 +182,7 @@
 	},
 	"dependencies": {
 		"@azure/storage-blob": "^12.17.0",
+		"@kreisler/js-google-translate-free": "^4.0.2",
 		"archiver": "^6.0.1",
 		"aws-sdk": "^2.717.0",
 		"form-data": "^4.0.0",

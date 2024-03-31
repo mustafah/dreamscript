@@ -2,28 +2,38 @@ import { llm } from "./llm";
 import { translateCommandTemplate } from "./translate.template";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import { Keys } from "./keys";
 import { Configs } from "./configs";
+import JsGoogleTranslateFree from "@kreisler/js-google-translate-free";
 
-// https://github.com/topics/google-translate-free-api
+export async function translateGoogle() {
+    try {
+        const from = "es";
+        const to = "en";
+        const text = "buenos días";
+        const translation = await JsGoogleTranslateFree.translate({ from, to, text });
+        console.log(translation); // Good morning
+      } catch (error) {
+        console.error(error);
+      }
+}
 
-export async function translate() {
+export async function translateCommand() {
     const maxLength: number = 160;
 
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
-    
+
     await editor.document.save();
     const dreamFilePath = editor.document.uri.fsPath;
 
     const inputString = fs.readFileSync(dreamFilePath, 'utf8');
 
-    
+
     const result: string[] = [];
     const lines = inputString.split('\n');
 
     for (const line of lines) {
-		const trimmedLine = line.trim();
+        const trimmedLine = line.trim();
         if (trimmedLine.startsWith('~') || trimmedLine.startsWith('//') || trimmedLine.trim() === '') {
             result.push(line);
         } else {
@@ -52,7 +62,7 @@ export async function translate() {
     const content = result.join('\n');
 
     const language = await Configs.getConfig('translationLanguage', 'Enter your preferred translation language name (e.g., French, Arabic, Spanish !)');
-	const question = translateCommandTemplate({content, language});
+    const question = translateCommandTemplate({ content, language });
 
     const backendChoice = await Configs.getConfig('llmBackend');
 
