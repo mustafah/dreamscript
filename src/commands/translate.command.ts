@@ -3,19 +3,7 @@ import { translateCommandTemplate } from "./translate.template";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { Configs } from "./configs";
-import JsGoogleTranslateFree from "@kreisler/js-google-translate-free";
 
-export async function translateGoogle() {
-    try {
-        const from = "es";
-        const to = "en";
-        const text = "buenos días";
-        const translation = await JsGoogleTranslateFree.translate({ from, to, text });
-        console.log(translation); // Good morning
-      } catch (error) {
-        console.error(error);
-      }
-}
 
 export async function translateCommand() {
     const maxLength: number = 160;

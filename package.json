@@ -176,7 +176,7 @@
 		"compile": "tsc -p ./",
 		"lint": "eslint \"src/**/*.ts\"",
 		"watch": "tsc -w -p ./",
-		"postinstall": "node install.js"
+		"postinstall": "node src/install.js"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.86.0",

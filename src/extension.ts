@@ -3,7 +3,7 @@ import { branch } from './commands/branch.command';
 import { pasteImage } from './commands/paste.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
 import { Globals } from './globals';
-import { translateCommand, translateGoogle } from './commands/translate.command';
+import { translateCommand } from './commands/translate.command';
 import { emojify } from './commands/emojify.command';
 import { promptify } from './commands/promptify.command';
 import { Keys } from './commands/keys';
@@ -13,9 +13,6 @@ import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
 
 export async function activate(context: vscode.ExtensionContext) {
-
-    await translateGoogle();
-    // await uploadMain();
 
 	// <ImagesPanel>
     Globals.extensionContext = context;
