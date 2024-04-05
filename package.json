@@ -80,6 +80,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.pasteParameters",
+				"title": "📋🔠 Paste Parameters",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.format",
 				"title": "📐🖌️ Format",
 				"category": "DreamScript"

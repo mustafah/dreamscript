@@ -37,7 +37,7 @@ export async function exportCommand(password = false) {
         fs.mkdirSync(vscodeDir);
     }
     fs.writeFileSync(extensionsFile, JSON.stringify({
-        "recommendations": ["mustafah.dreamscript"]
+        "recommendations": ["mustafah.dreamscript", "cweijan.vscode-typora"]
     }, null, 2));
 
     // Setting up the zip file
@@ -46,7 +46,8 @@ export async function exportCommand(password = false) {
         archiver.registerFormat('zip-encrypted', archiverZipEncrypted);
         zip = archiver.create('zip-encrypted', {zlib: {level: 9}, encryptionMethod: 'aes256', password: enteredPassword});
     } else {
-        zip = archiver('zip', { zlib: { level: 9 }});
+        // zip = archiver.archiver('zip', { zlib: { level: 9 }});
+        zip = archiver.create('zip', {zlib: {level: 9}});
     }
     
 
@@ -55,6 +56,16 @@ export async function exportCommand(password = false) {
     const projectName = sanitizeWorkspaceName(workspaceFolder.name);
     const zipFilePath = path.join(workspaceFolder.uri.fsPath, '..', zipFileName);
     const output = fs.createWriteStream(zipFilePath);
+
+    // <README>
+    function titleize(str) {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
+    }
+    const readmeFile = path.join(workspaceFolder.uri.fsPath, 'README.md');
+    if (!fs.existsSync(readmeFile))
+        fs.writeFileSync(readmeFile, `\n ✧･ﾟ: ✧･ﾟ: Welcome to ✧･ ${titleize(projectName)} ･✧ project :･ﾟ✧:･ﾟ✧\n`);
+    
+    // </README>
 
     output.on('close', async function () {
         vscode.window.withProgress({

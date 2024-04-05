@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { branch } from './commands/branch.command';
-import { pasteImage } from './commands/paste.command';
+import { pasteImage } from './commands/paste-images.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
 import { Globals } from './globals';
 import { translateCommand } from './commands/translate.command';
@@ -11,6 +11,7 @@ import { selectLLMBackend } from './commands/selectLLMBackend';
 import { compileCommand } from './commands/compile.command';
 import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
+import { pasteParameters } from './commands/paste-parameters.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -34,6 +35,13 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(pasteImageDisposable);
 	// </PasteImage>
     
+    // <PasteParameters>
+    const pasteParametersDisposable = vscode.commands.registerCommand('dreamscript.pasteParameters', async () => {
+        await pasteParameters();
+    });
+    context.subscriptions.push(pasteImageDisposable);
+	// </PasteParameters>
+
     // <Translate>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.translate', async () => {
         await translateCommand();

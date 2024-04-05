@@ -3,10 +3,12 @@ import { translateCommandTemplate } from "./translate.template";
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { Configs } from "./configs";
+import { translateGoogle } from "./translate.google";
+import DreamScriptCompiler, { separators } from "./dreamscript.compiler";
+import { getAbbreviation } from "./translate.languages";
 
 
 export async function translateCommand() {
-    const maxLength: number = 160;
 
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
@@ -19,53 +21,58 @@ export async function translateCommand() {
 
     const result: string[] = [];
     const lines = inputString.split('\n');
-
-    for (const line of lines) {
-        const trimmedLine = line.trim();
-        if (trimmedLine.startsWith('~') || trimmedLine.startsWith('//') || trimmedLine.trim() === '') {
+    const compiler = new DreamScriptCompiler();
+    const language = await Configs.getConfig('translationLanguage', 'Enter your preferred translation language name (e.g., French, Arabic, Spanish !)');
+    const languageAbbreviation = await getAbbreviation(language);
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        line = line.trim();
+        if (line.startsWith('//') || line.trim() === '') {
             result.push(line);
         } else {
-            const regex = /(?<=[.?!,:;])\s+/;
-            const fragments = line.split(regex);
-            let currentLine = '';
-
-            for (let fragment of fragments) {
-                fragment = fragment.trim();
-                if (currentLine.length + fragment.length > maxLength) {
-                    result.push(currentLine);
-                    result.push(`~ [TRANSLATED_LINE]\n`); // Add translated line
-                    currentLine = fragment;
-                } else {
-                    currentLine += (currentLine.length > 0 ? ' ' : '') + fragment;
+            if (compiler.processScriptLine(line)) {
+                result.push(line);
+            } else {
+                let nextNonEmptyLine: string = '';
+                let j = i + 1;
+                for (; j < lines.length; j++) {
+                    nextNonEmptyLine = lines[j].trim();
+                    if (nextNonEmptyLine !== '') {
+                        break;
+                    }
                 }
-            }
-
-            if (currentLine.length > 0) {
-                result.push(currentLine);
-                result.push(`~ [TRANSLATED_LINE]`); // Add translated line
+                line = line.replace(separators, ',');
+                result.push(line);
+                
+                const translation = await translateGoogle(line.replace(',', ''), languageAbbreviation);
+                if (compiler.isTranslateLine(nextNonEmptyLine)) {
+                    i = j;
+                }
+                result.push(`~ ${translation}`);
             }
         }
     }
 
     const content = result.join('\n');
 
-    const language = await Configs.getConfig('translationLanguage', 'Enter your preferred translation language name (e.g., French, Arabic, Spanish !)');
-    const question = translateCommandTemplate({ content, language });
+    fs.writeFileSync(dreamFilePath, content);
 
-    const backendChoice = await Configs.getConfig('llmBackend');
+    // const question = translateCommandTemplate({ content, language });
 
-    await vscode.window.withProgress({
-        location: vscode.ProgressLocation.Notification,
-        title: `🇺🇳 Translating using ${backendChoice}...`,
-        cancellable: false
-    }, async (progress) => {
-        // Perform the translation
-        try {
-            const response = await llm(question);
-            fs.writeFileSync(dreamFilePath, response);
+    // const backendChoice = await Configs.getConfig('llmBackend');
 
-        } catch (error) {
-            vscode.window.showErrorMessage(`Error during translation: ${error}`);
-        }
-    });
+    // await vscode.window.withProgress({
+    //     location: vscode.ProgressLocation.Notification,
+    //     title: `🇺🇳 Translating using ${backendChoice}...`,
+    //     cancellable: false
+    // }, async (progress) => {
+    //     // Perform the translation
+    //     try {
+    //         const response = await llm(question);
+    //         fs.writeFileSync(dreamFilePath, response);
+
+    //     } catch (error) {
+    //         vscode.window.showErrorMessage(`Error during translation: ${error}`);
+    //     }
+    // });
 }

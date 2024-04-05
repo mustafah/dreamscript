@@ -2,29 +2,35 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+export const separators  = /[.,;]+$/;
 class DreamScriptCompiler {
     private promptLines: string[] = [];
     private variables: any = {};
     
-    constructor(private input: string) {}
+    constructor(private input: string = null) {}
 
     compile() {
         const lines = this.input.split('\n');
         for (let line of lines) {
             line = line.trim();
-            if (!this.processLine(line)) {
+            if (!this.processScriptLine(line)) {
                 if (line !== '') {
-                    line = line.replace(/[.,;]+$/, ',');
+                    line = line.replace(separators, ',');
                     this.promptLines.push(line);
                 }
             }
         }
-        this.variables.prompt = this.promptLines.join('\n');
+        this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
+        this.variables.prompt = this.promptLines.join(' \n');
         return this.variables;
     }
 
-    private processLine(line: string): boolean {
-        return this.processCommentLine(line) || this.processImportLine(line) || this.processAssignmentLine(line) || this.processUncompilableLine(line);
+    public processScriptLine(line: string): boolean {
+        return this.processCommentLine(line) || this.processImportLine(line) || this.processAssignmentLine(line) || this.processTranslationLine(line);
+    }
+
+    public isTranslateLine(line: string): boolean {
+        return !(this.processImportLine(line) || this.processAssignmentLine(line)) && this.processTranslationLine(line);
     }
 
     private processImportLine(line: string): boolean {
@@ -54,7 +60,7 @@ class DreamScriptCompiler {
     }
 
     private processAssignmentLine(line: string): boolean {
-        const assignmentMatch = line.match(/^\s*~\s*(\w+)\s*=\s*(.+)$/);
+        const assignmentMatch = line.match(/^\s*~(.*)=(.+)$/);
         if (assignmentMatch) {
             const variableName = assignmentMatch[1];
             const expression = assignmentMatch[2];
@@ -76,7 +82,7 @@ class DreamScriptCompiler {
         return false;
       }
 
-    private processUncompilableLine(line: string): boolean {
+    private processTranslationLine(line: string): boolean {
         if (line.startsWith('~')) {
           return true;
         }
