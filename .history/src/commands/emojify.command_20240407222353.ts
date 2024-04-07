@@ -65,8 +65,8 @@ export async function emojifyCommand() {
             } else {
                 line = line.replace(separators, ',');
                 const emojiIndex = Object.keys(emojis).length;
+                result.push(`~#${emojiIndex}# ${line}`);
                 const cleanLine = emojiStrip(line).trim();
-                result.push(`~#${emojiIndex}# ${cleanLine}`);
                 emojis[cleanLine] = '';
             }
         }
@@ -97,8 +97,6 @@ export async function emojifyCommand() {
             });
 
             fs.writeFileSync(dreamFilePath, content);
-            editor.document.save(); // Trigger save event for other extensions
-            vscode.commands.executeCommand('workbench.action.files.save');
 
         } catch (error) {
             vscode.window.showErrorMessage(`Error during emojify: ${error}`);

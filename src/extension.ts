@@ -4,7 +4,7 @@ import { pasteImage } from './commands/paste-images.command';
 import { ImagesPanelViewProvider } from './commands/images.panel';
 import { Globals } from './globals';
 import { translateCommand } from './commands/translate.command';
-import { emojify } from './commands/emojify.command';
+import { emojify, emojifyCommand } from './commands/emojify.command';
 import { promptify } from './commands/promptify.command';
 import { Keys } from './commands/keys';
 import { selectLLMBackend } from './commands/selectLLMBackend';
@@ -50,7 +50,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // <Emojify>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.emojify', async () => {
-        await emojify();
+        // await emojify();
+        await emojifyCommand();
     }));
 	// </Emojify>
 

@@ -65,19 +65,19 @@ export async function emojifyCommand() {
             } else {
                 line = line.replace(separators, ',');
                 const emojiIndex = Object.keys(emojis).length;
+                result.push(`~#${emojiIndex}# ${line}`);
                 const cleanLine = emojiStrip(line).trim();
-                result.push(`~#${emojiIndex}# ${cleanLine}`);
                 emojis[cleanLine] = '';
             }
         }
     }
 
-    let content = result.join('\n');
+    // const content = result.join('\n');
 
     // fs.writeFileSync(dreamFilePath, content);
 
-    const emojisJSON = JSON.stringify(emojis);
-	const question = emojifyCommandTemplate({content: emojisJSON});
+    const content = JSON.stringify(emojis);
+	const question = emojifyCommandTemplate({content});
     
     const backendChoice = await Configs.getConfig('llmBackend');
 
@@ -89,16 +89,7 @@ export async function emojifyCommand() {
         // Perform the translation
         try {
             const response = await llm(question);
-            const jsonResponse = JSON.parse(response);
-            Object.entries(emojis).forEach(([key, value], index) => {
-                // console.log(`${index}: ${key}`);
-                const [_, emoji] = Object.entries(jsonResponse)[index];
-                content = content.replace(`~#${index}#`, emoji as string);
-            });
-
-            fs.writeFileSync(dreamFilePath, content);
-            editor.document.save(); // Trigger save event for other extensions
-            vscode.commands.executeCommand('workbench.action.files.save');
+            fs.writeFileSync(dreamFilePath, response);
 
         } catch (error) {
             vscode.window.showErrorMessage(`Error during emojify: ${error}`);

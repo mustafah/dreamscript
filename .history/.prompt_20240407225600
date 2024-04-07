@@ -3,7 +3,8 @@ progressive=False
 chunk="None"
 question="
 
-    we want add another backend for google gemni, if I'm having api key, how we can add it
+    we want trigger save event after ' fs.writeFileSync(dreamFilePath, content); '
+    because some extensions depend on it
 
 "
 
