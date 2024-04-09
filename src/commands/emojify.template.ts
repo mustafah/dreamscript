@@ -18,10 +18,11 @@ const template2 = `
 const template = `
   forget everything before,
   
-  in the following JSON after [CONTENT] there are keys and empty values, fill inside values expressive emojis (one or two or three emojis) represengint its keys
+  in the following JSON after [CONTENT] there are keys and empty values, fill inside values expressive emojis (up to three emojis) represengint its keys
 
   * Respond only with updated CONTENT
   * Ignore the CONTENT marker in your response
+  * Make sure you only respond with valid JSON
   
   [CONTENT]
 

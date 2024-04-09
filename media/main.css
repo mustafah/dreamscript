@@ -12,6 +12,7 @@ html, body {
 
 .grid-item { 
 	width: 200px;
+    max-width: 100%;
 	border-radius: 8px;
 	overflow: hidden;
 	box-sizing: border-box;

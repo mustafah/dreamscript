@@ -98,7 +98,9 @@ export async function emojifyCommand() {
 
             fs.writeFileSync(dreamFilePath, content);
             editor.document.save(); // Trigger save event for other extensions
-            vscode.commands.executeCommand('workbench.action.files.save');
+            setTimeout(() => {
+                vscode.commands.executeCommand('workbench.action.files.save');
+            }, 500);
 
         } catch (error) {
             vscode.window.showErrorMessage(`Error during emojify: ${error}`);

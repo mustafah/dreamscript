@@ -149,6 +149,7 @@
 				"dreamscript.llmBackend": {
 					"type": "string",
 					"enum": [
+						"Google Gemini",
 						"OpenAI",
 						"Ollama Mistral (Expiremental)"
 					],
@@ -192,6 +193,7 @@
 	},
 	"dependencies": {
 		"@azure/storage-blob": "^12.17.0",
+		"@google/generative-ai": "^0.5.0",
 		"@kreisler/js-google-translate-free": "^4.0.2",
 		"archiver": "^6.0.1",
 		"archiver-zip-encrypted": "^2.0.0",

@@ -3,13 +3,14 @@ progressive=False
 chunk="None"
 question="
 
-    we want add another backend for google gemni, if I'm having api key, how we can add it
+    if we have an image with very large width we expect it to take multiple columns
 
 "
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
+    /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
+    # /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/emojify.command.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/translate.languages.ts
     # /Users/mustafah/Projects/dreamscript/src/commands/paste-parameters.command.ts

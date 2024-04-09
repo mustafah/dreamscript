@@ -53,7 +53,7 @@ export async function pasteImage() {
                 if (match) {
                     dreamFileContent = dreamFileContent.replace(outputRegex, `$1 ${imageFileName}, ${match[2].trim()}`);
                 } else {
-                    dreamFileContent = `\n~images = ${imageFileName}` + dreamFileContent;
+                    dreamFileContent = `\n~images = ${imageFileName}\n\n` + dreamFileContent;
                 }
 
 

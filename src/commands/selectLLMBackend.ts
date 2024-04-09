@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-export const llmBackends = ['OpenAI', 'Ollama Mistral (Expiremental)'];
+export const llmBackends = ['Google Gemini', 'OpenAI', 'Ollama Mistral (Expiremental)'];
 
 export async function selectLLMBackend() {
     // Get the current backend setting

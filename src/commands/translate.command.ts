@@ -6,7 +6,7 @@ import { Configs } from "./configs";
 import { translateGoogle } from "./translate.google";
 import DreamScriptCompiler, { separators } from "./dreamscript.compiler";
 import { getAbbreviation } from "./translate.languages";
-
+import emojiStrip from "emoji-strip";
 
 export async function translateCommand() {
 
@@ -44,7 +44,8 @@ export async function translateCommand() {
                 line = line.replace(separators, ',');
                 result.push(line);
                 
-                const translation = await translateGoogle(line.replace(',', ''), languageAbbreviation);
+                const cleanLine = emojiStrip(line).trim();
+                const translation = await translateGoogle(cleanLine.replace(',', ''), languageAbbreviation);
                 if (compiler.isTranslateLine(nextNonEmptyLine)) {
                     i = j;
                 }
