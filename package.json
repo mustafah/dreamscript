@@ -203,6 +203,7 @@
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",
 		"save-clipboard-image": "^1.0.0",
+		"sharp": "^0.33.3",
 		"uuid": "^9.0.1"
 	}
 }

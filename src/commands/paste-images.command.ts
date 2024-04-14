@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Globals } from '../globals';
 import { execSync } from 'child_process';
 import { IMAGES_REGEX } from './regex';
+import { splitImageByWidth } from './split';
 
 
 
@@ -43,6 +44,11 @@ export async function pasteImage() {
                 vscode.window.showErrorMessage('Direct image paste is not supported on this system.');
                 return;
             }
+
+            const splitImagePaths = await splitImageByWidth(imagePath);
+
+            imageFileName = splitImagePaths.map(p => path.basename(p, path.extname(p))).join(', ');
+
 
             const dreamFilePath = editor.document.uri.fsPath;
             if (fs.existsSync(dreamFilePath)) {
