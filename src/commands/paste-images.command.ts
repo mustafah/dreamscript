@@ -59,7 +59,7 @@ export async function pasteImage() {
                 if (match) {
                     dreamFileContent = dreamFileContent.replace(outputRegex, `$1 ${imageFileName}, ${match[2].trim()}`);
                 } else {
-                    dreamFileContent = `\n~images = ${imageFileName}\n\n` + dreamFileContent;
+                    dreamFileContent = dreamFileContent + `\n// Result\n~ images = ${imageFileName}\n`;
                 }
 
 
@@ -67,9 +67,12 @@ export async function pasteImage() {
                 vscode.window.showInformationMessage(`Image added: ${imageFileName}`);
                 Globals.imagesPanelProvider?.updateWebviewContent(dreamFileContent);
 
-                // Save the current dream file content as a snapshot
-                const originalPath = path.join(imagesDir, `${imageFileName}.original.dream`);
-                fs.writeFileSync(originalPath, dreamFileContent);
+                splitImagePaths.forEach(p => {
+                    const imageFileName = path.basename(p, path.extname(p));
+                    // Save the current dream file content as a snapshot
+                    const originalPath = path.join(imagesDir, `${imageFileName}.original.dream`);
+                    fs.writeFileSync(originalPath, dreamFileContent);
+                });
 
             } else {
                 vscode.window.showErrorMessage('Dream file not found.');

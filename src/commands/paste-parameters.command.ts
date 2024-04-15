@@ -23,7 +23,7 @@ export async function pasteParameters() {
                 let dreamFileContent = fs.readFileSync(dreamFilePath, 'utf8');
 
                 
-                dreamFileContent = `${dreamFileContent}\n${convertParams(clipboardContent)}`;
+                dreamFileContent = `${dreamFileContent}\n// Parameters\n${convertParams(clipboardContent)}`;
 
 
                 fs.writeFileSync(dreamFilePath, dreamFileContent);
@@ -62,7 +62,9 @@ function convertParams(input: string) {
         'RAW Mode',
         'Prompt Magic',
         'High Contrast',
-        'Finetuned Model'
+        'Finetuned Model',
+        'Workflow',
+        'Elements'
     ];
 
     let currentValue = '';
