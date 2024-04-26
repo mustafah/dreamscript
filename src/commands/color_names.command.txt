@@ -1,7 +1,0 @@
-FORGET ANY THING BEFORE,
-just respond with json where is the key is the lowercase hexadecimal color and their values its nearest known color name, please extract hexadecimal from the [CONTENT] below
-* Respond only with JSON with no other text before or after
-
-[CONTENT]
-
-background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%);

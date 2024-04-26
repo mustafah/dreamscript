@@ -12,6 +12,7 @@ import { compileCommand } from './commands/compile.command';
 import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
 import { pasteParameters } from './commands/paste-parameters.command';
+import { colorize } from './commands/colorize.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -60,6 +61,12 @@ export async function activate(context: vscode.ExtensionContext) {
         await promptify();
     }));
 	// </Promptify>
+
+    // <Colorize>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.colorize', async () => {
+        await colorize();
+    }));
+	// </Colorize>
 
     // <ClearKeys>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearKeys', async () => {

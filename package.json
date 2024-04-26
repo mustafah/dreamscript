@@ -105,6 +105,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.colorize",
+				"title": "🎨 Colorize",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.clearKeys",
 				"title": "✨ Clear API keys",
 				"category": "DreamScript"
