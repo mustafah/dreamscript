@@ -49,7 +49,7 @@ export async function colorize() {
                         let k = key;
                         if (k.startsWith('#')) k = key.slice(1);
                         const regex = new RegExp('#?' + k, 'gi');
-                        selectedText = selectedText.replace(regex, `"${responseJson[key]}"`);
+                        selectedText = selectedText.replace(regex, `"${responseJson[key]} color"`);
                     });
                     editBuilder.replace(new vscode.Range(startPosition, endPosition), selectedText);
                 } catch (error) {
