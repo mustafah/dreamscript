@@ -128,6 +128,11 @@
 				"command": "dreamscript.exportWithPassword",
 				"title": "🌍🤝 Export with password",
 				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.clearEmojis",
+				"title": "☺️ Clear Emojis",
+				"category": "DreamScript"
 			}
 		],
 		"menus": {
