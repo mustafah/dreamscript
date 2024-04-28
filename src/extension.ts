@@ -103,4 +103,11 @@ export async function activate(context: vscode.ExtensionContext) {
         exportCommand(true);
     }));
     // </Export>
+
+    // <ClearEmojis>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearEmojis', async () => {
+        exportCommand(true);
+    }));
+    // </ClearEmojis>
+    
 }
