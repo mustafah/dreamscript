@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import emojiStrip from "emoji-strip";
 
 export const separators  = /[.,;]+$/;
 class DreamScriptCompiler {
@@ -21,6 +22,17 @@ class DreamScriptCompiler {
             }
         }
         this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
+        this.variables.prompt = this.promptLines.join(' \n');
+        return this.variables;
+    }
+
+    clearEmojis() {
+        const lines = this.input.split('\n');
+        for (let line of lines) {
+            line = emojiStrip(line).trim();
+            this.promptLines.push(line);
+        }
+        // this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
         this.variables.prompt = this.promptLines.join(' \n');
         return this.variables;
     }
