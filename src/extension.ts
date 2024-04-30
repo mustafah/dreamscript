@@ -13,6 +13,7 @@ import { formatCommand } from './commands/format.command';
 import { exportCommand } from './commands/export.command';
 import { pasteParameters } from './commands/paste-parameters.command';
 import { colorize } from './commands/colorize.command';
+import { clearEmojis } from './commands/clearEmojis.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -106,7 +107,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // <ClearEmojis>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearEmojis', async () => {
-        exportCommand(true);
+        clearEmojis();
     }));
     // </ClearEmojis>
     
