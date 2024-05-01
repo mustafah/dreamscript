@@ -131,7 +131,12 @@
 			},
 			{
 				"command": "dreamscript.clearEmojis",
-				"title": "☺️ Clear Emojis",
+				"title": "🧹 Clear Emojis",
+				"category": "DreamScript"
+			},
+			{
+				"command": "dreamscript.clearTranslations",
+				"title": "🧹 Clear Translations",
 				"category": "DreamScript"
 			}
 		],

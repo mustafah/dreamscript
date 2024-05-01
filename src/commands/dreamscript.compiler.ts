@@ -37,6 +37,17 @@ class DreamScriptCompiler {
         return this.variables;
     }
 
+    clearTranslations() {
+        const lines = this.input.split('\n');
+        for (let line of lines) {
+            line = emojiStrip(line).trim();
+            this.promptLines.push(line);
+        }
+        // this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
+        this.variables.prompt = this.promptLines.join(' \n');
+        return this.variables;
+    }
+
     public processScriptLine(line: string): boolean {
         return this.processCommentLine(line) || this.processImportLine(line) || this.processAssignmentLine(line) || this.processTranslationLine(line);
     }

@@ -14,6 +14,7 @@ import { exportCommand } from './commands/export.command';
 import { pasteParameters } from './commands/paste-parameters.command';
 import { colorize } from './commands/colorize.command';
 import { clearEmojis } from './commands/clearEmojis.command';
+import { clearTranslations } from './commands/clearTranslations.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -111,4 +112,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
     // </ClearEmojis>
     
+    // <ClearTranslations>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearTranslations', async () => {
+        clearTranslations();
+    }));
+    // </ClearTranslations>
 }
