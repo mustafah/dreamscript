@@ -2,15 +2,16 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import emojiStrip from "emoji-strip";
+import { nanoid } from 'nanoid';
 
 export const separators  = /[.,;]+$/;
 class DreamScriptCompiler {
     private promptLines: string[] = [];
     private variables: any = {};
-    
+    static lastUniqueID;
     constructor(private input: string = null) {}
 
-    compile() {
+    compile({autoUniqueIDEnabled = true} = {}) {
         const lines = this.input.split('\n');
         for (let line of lines) {
             line = line.trim();
@@ -23,7 +24,16 @@ class DreamScriptCompiler {
         }
         this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
         this.variables.prompt = this.promptLines.join(' \n');
+        if (autoUniqueIDEnabled && this.isUniqueID()) {
+            const uniqueID = nanoid();
+            DreamScriptCompiler.lastUniqueID = uniqueID;
+            this.variables.prompt += ` {${uniqueID}}`;
+        }
         return this.variables;
+    }
+
+    isUniqueID() {
+        return ['ON', 'TRUE', 'AUTO'].includes(this.variables['Unique ID'].toUpperCase());
     }
 
     clearEmojis() {
@@ -82,11 +92,15 @@ class DreamScriptCompiler {
         }
     }
 
+    
     private processAssignmentLine(line: string): boolean {
         const assignmentMatch = line.match(/^\s*~(.*)=(.+)$/);
         if (assignmentMatch) {
-            const variableName = assignmentMatch[1];
-            const expression = assignmentMatch[2];
+            const titleize = function(str) {
+                return str.replace(/\b\w/g, char => char.toUpperCase());
+            };
+            const variableName = titleize(assignmentMatch[1].trim());
+            const expression = assignmentMatch[2].trim();
             try {
                 this.variables[variableName] = eval(expression);
             } catch (e) {

@@ -3,7 +3,7 @@ progressive=False
 chunk="None"
 question="
 
-    if we have an image with very large width we expect it to take multiple columns
+    
 
 "
 

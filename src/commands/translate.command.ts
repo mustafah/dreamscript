@@ -57,23 +57,4 @@ export async function translateCommand() {
     const content = result.join('\n');
 
     fs.writeFileSync(dreamFilePath, content);
-
-    // const question = translateCommandTemplate({ content, language });
-
-    // const backendChoice = await Configs.getConfig('llmBackend');
-
-    // await vscode.window.withProgress({
-    //     location: vscode.ProgressLocation.Notification,
-    //     title: `🇺🇳 Translating using ${backendChoice}...`,
-    //     cancellable: false
-    // }, async (progress) => {
-    //     // Perform the translation
-    //     try {
-    //         const response = await llm(question);
-    //         fs.writeFileSync(dreamFilePath, response);
-
-    //     } catch (error) {
-    //         vscode.window.showErrorMessage(`Error during translation: ${error}`);
-    //     }
-    // });
 }

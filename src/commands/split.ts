@@ -7,10 +7,10 @@ export async function splitImageByWidth(imagePath: string, numSplits: number = n
   const image = await sharp(imagePath);
   const { width, height } = await image.metadata();
 
-  if (!numSplits) numSplits = Math.round(width / height);
+  if (!numSplits) numSplits = 4;// Math.round(width / height);
 
   if (numSplits > 1) {
-    numSplits -= 1;
+    // numSplits -= 1;
     // if (numSplits > 4) numSplits = 4;
     const answer = await vscode.window.showInputBox({
       value: numSplits.toString(),
