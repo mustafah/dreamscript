@@ -33,7 +33,7 @@ class DreamScriptCompiler {
     }
 
     isUniqueID() {
-        return ['ON', 'TRUE', 'AUTO'].includes(this.variables['Unique ID'].toUpperCase());
+        return ['ON', 'TRUE', 'AUTO'].includes(this.variables['Unique ID']?.toUpperCase());
     }
 
     clearEmojis() {
