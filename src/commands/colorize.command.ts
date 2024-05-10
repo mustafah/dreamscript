@@ -18,6 +18,7 @@ export async function colorize() {
 
     const selection = editor.selection;
     let selectedText = editor.document.getText(selection);
+    const originalSelectedText = selectedText;
 
     if (!selectedText) {
         vscode.window.showInformationMessage("No text selected. Please select text to colorize.");
@@ -51,7 +52,7 @@ export async function colorize() {
                         const regex = new RegExp('#?' + k, 'gi');
                         selectedText = selectedText.replace(regex, `"${responseJson[key]} color"`);
                     });
-                    editBuilder.replace(new vscode.Range(startPosition, endPosition), selectedText);
+                    editBuilder.replace(new vscode.Range(startPosition, endPosition), `//${originalSelectedText}\n${selectedText}`);
                 } catch (error) {
                     // do nothing, if there's an error parsing the json, just use the raw response
                     vscode.window.showErrorMessage(`Error during color: ${error}`);
