@@ -15,6 +15,7 @@ import { pasteParameters } from './commands/paste-parameters.command';
 import { colorize } from './commands/colorize.command';
 import { clearEmojis } from './commands/clearEmojis.command';
 import { clearTranslations } from './commands/clearTranslations.command';
+import { customizedPromptify } from './commands/customizedPromptify.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -61,6 +62,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // <Promptify>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.promptify', async () => {
         await promptify();
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.customizedPromptify', async () => {
+        await customizedPromptify();
     }));
 	// </Promptify>
 
