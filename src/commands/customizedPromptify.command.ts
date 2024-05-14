@@ -26,6 +26,13 @@ export async function customizedPromptify() {
     
     const maxLines = await Configs.getConfig('promptifyMaxLines');
 
+
+    const promptQuery = await vscode.window.showInputBox({
+        prompt: "Please enter the prompt query for this selection",
+        // value: 'starting after [CONTENT], can you write a better prompt for midjourney or lenardoai, apply the following rules:\n\n* the new prompt should have {{ maxLines }} lines maximum\n* keep lines starting with ~ or // as is\n* Respond only with updated CONTENT\n* Ignore the CONTENT marker in your response',
+    });
+    if (!promptQuery) return;
+
 	const question = promptifyCommandTemplate({content: selectedText, maxLines});
     
     const backendChoice = await Configs.getConfig('llmBackend');
