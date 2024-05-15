@@ -105,6 +105,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.customizedPromptify",
+				"title": "💡 Customized Promptify",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.colorize",
 				"title": "🎨 Colorize",
 				"category": "DreamScript"
