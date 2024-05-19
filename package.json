@@ -110,6 +110,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.createPromptify",
+				"title": "💡 Create Prompt",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.colorize",
 				"title": "🎨 Colorize",
 				"category": "DreamScript"
@@ -186,6 +191,12 @@
 					"default": 2,
 					"minimum": 1,
 					"description": "Maximum number of lines for Promptify command"
+				},
+				"dreamscript.createPromptMaxLines": {
+					"type": "integer",
+					"default": 5,
+					"minimum": 1,
+					"description": "Maximum number of lines for Create Prompt command"
 				},
 				"dreamscript.llmTemperature": {
 					"type": "number",
