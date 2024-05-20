@@ -9,10 +9,6 @@ question="
 
 file_list="
 
-    /Users/mustafah/Projects/dreamscript/media/images.panel.wvjs
-    # /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/emojify.command.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/translate.languages.ts
-    # /Users/mustafah/Projects/dreamscript/src/commands/paste-parameters.command.ts
+    
 
 "
