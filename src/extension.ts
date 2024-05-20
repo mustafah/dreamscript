@@ -16,6 +16,7 @@ import { colorize } from './commands/colorize.command';
 import { clearEmojis } from './commands/clearEmojis.command';
 import { clearTranslations } from './commands/clearTranslations.command';
 import { customizedPromptify } from './commands/customizedPromptify.command';
+import { createPrompt } from './commands/createPrompt.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -65,6 +66,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }));
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.customizedPromptify', async () => {
         await customizedPromptify();
+    }));
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.createPromptify', async () => {
+        await createPrompt();
     }));
 	// </Promptify>
 
