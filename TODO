@@ -41,3 +41,6 @@ Create image panel showing liked images
 
 show title of image
 A conversation to create a prompt
+
+
+Original Source should only contain the images it reference, and have command to create branch from an image
