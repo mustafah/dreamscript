@@ -25,6 +25,7 @@ COMPARE between scripts
 when branch ask to reset images !
 
 remove emojis
+
 remove translations
 
 variations of colors
@@ -40,3 +41,7 @@ Clear images when branching ...
 translation for both directions
 
 A conversation to create a prompt
+
+create the ID from the file name itself, so the same file will always create same hash !
+
+Paste prompt as with each statement on its new line without the ID at the end
