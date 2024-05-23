@@ -127,19 +127,19 @@ export async function activate(context: vscode.ExtensionContext) {
     // </ClearTranslations>
 }
 
-import crypto from 'crypto';
+// import crypto from 'crypto';
 
+// // function generateStringHash(inputString) {
+// //   const hash = crypto.createHash('sha256'); 
+// //   hash.update(inputString);
+// //   return hash.digest('hex'); // Get the hash as a hexadecimal string
+// // }
 // function generateStringHash(inputString) {
-//   const hash = crypto.createHash('sha256'); 
-//   hash.update(inputString);
-//   return hash.digest('hex'); // Get the hash as a hexadecimal string
-// }
-function generateStringHash(inputString) {
-    const hash = crypto.createHash('md5'); // Use 'md5' instead of 'sha256'
-    hash.update(inputString);
-    return hash.digest('hex'); 
-  }
-const myString = "halves.patch4.dream";
-const uniqueHash = generateStringHash(myString);
+//     const hash = crypto.createHash('md5'); // Use 'md5' instead of 'sha256'
+//     hash.update(inputString);
+//     return hash.digest('hex'); 
+//   }
+// const myString = "halves.patch4.dream";
+// const uniqueHash = generateStringHash(myString);
 
-console.log(uniqueHash); 
+// console.log(uniqueHash); 
