@@ -127,7 +127,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // </ClearTranslations>
 }
 
-// import crypto from 'crypto';
+
 
 // // function generateStringHash(inputString) {
 // //   const hash = crypto.createHash('sha256'); 

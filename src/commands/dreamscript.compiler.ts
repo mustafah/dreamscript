@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import emojiStrip from "emoji-strip";
 import { nanoid } from 'nanoid';
+import crypto from 'crypto';
 
 export const separators  = /[.,;]+$/;
 class DreamScriptCompiler {
@@ -25,7 +26,12 @@ class DreamScriptCompiler {
         this.promptLines[this.promptLines.length - 1] = this.promptLines[this.promptLines.length - 1].replace(separators, '') + '.';
         this.variables.prompt = this.promptLines.join(' \n');
         if (autoUniqueIDEnabled && this.isUniqueID()) {
-            const uniqueID = nanoid();
+            let uniqueID;
+            if (this.isFilenameUniqueID()) {
+
+            } else {
+                uniqueID = nanoid();
+            }
             DreamScriptCompiler.lastUniqueID = uniqueID;
             this.variables.prompt += ` {${uniqueID}}`;
         }
@@ -33,7 +39,11 @@ class DreamScriptCompiler {
     }
 
     isUniqueID() {
-        return ['ON', 'TRUE', 'AUTO'].includes(this.variables['Unique ID']?.toUpperCase());
+        return ['ON', 'TRUE', 'AUTO', 'FILENAME', 'FILE'].includes(this.variables['Unique ID']?.toUpperCase());
+    }
+
+    isFilenameUniqueID() {
+        return ['FILENAME', 'FILE'].includes(this.variables['Unique ID']?.toUpperCase());
     }
 
     clearEmojis() {
