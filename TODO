@@ -28,13 +28,9 @@ remove emojis
 
 remove translations
 
-variations of colors
-
 reference images
 
 compile negative prompt
-
-promptify on a selected line with a question prompt (SHOW THEM IN A DIALOG OR LIKE CODEIUM)...
 
 Clear images when branching ...
 
@@ -45,3 +41,12 @@ A conversation to create a prompt
 create the ID from the file name itself, so the same file will always create same hash !
 
 Paste prompt as with each statement on its new line without the ID at the end
+ContextMenu should have command to switch to code of that image
+
+Create image panel showing liked images
+
+show title of image
+A conversation to create a prompt
+
+
+Original Source should only contain the images it reference, and have command to create branch from an image

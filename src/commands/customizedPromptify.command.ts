@@ -6,6 +6,7 @@ import { Keys } from "./keys";
 import { Configs } from "./configs";
 import { emojifyCommandTemplate } from "./emojify.template";
 import { promptifyCommandTemplate } from "./promptify.template";
+import { customPromptifyCommandTemplate } from "./custom-promptify.template";
 
 export async function customizedPromptify() {
     const maxLength: number = 160;
@@ -33,7 +34,7 @@ export async function customizedPromptify() {
     });
     if (!promptQuery) return;
 
-	const question = promptifyCommandTemplate({content: selectedText, maxLines});
+	const question = customPromptifyCommandTemplate({promptQuery, content: selectedText, maxLines});
     
     const backendChoice = await Configs.getConfig('llmBackend');
     
