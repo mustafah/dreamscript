@@ -20,8 +20,6 @@ GIT hub for hosting
 
 translate from and to
 
-COMPARE between scripts
-
 when branch ask to reset images !
 
 remove emojis
@@ -40,7 +38,6 @@ A conversation to create a prompt
 
 create the ID from the file name itself, so the same file will always create same hash !
 
-Paste prompt as with each statement on its new line without the ID at the end
 ContextMenu should have command to switch to code of that image
 
 Create image panel showing liked images
@@ -50,3 +47,8 @@ A conversation to create a prompt
 
 
 Original Source should only contain the images it reference, and have command to create branch from an image
+
+
+PASTE prompt as with each statement on its new line without the ID at the end
+
+COMPARE between scripts

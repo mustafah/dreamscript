@@ -1,0 +1,27 @@
+Please compare PROMPT1 with PROMPT2 in the place of PROMPT1, and for each difference between them, write a hint if it's coming from PROMPT1 or PROMPT2,
+if there is a difference write it like: {PROMPT1: difference, PROMPT2: difference2}
+
+[PROMPT1]
+photorealism of A veiled figure stands before a many three vast array of mirrors,
+figure is conservatively dressed,
+non-skinny clothes,
+figure stands on a windswept cliff,
+gazing at a vast ocean bathed in the golden light of dusk,
+mirrors borders are glowy.
+{95tDy0KrQY7TCEi-DhgD-}
+
+
+[PROMPT2]
+these mirrors are rising from water to the sky,
+photorealism of A veiled figure stands before array of infinitely high mirrors,
+mirrors borders are glowy. 
+
+----------------------------------------
+
+photorealism of A veiled figure stands before {PROMPT1: a many three vast array of mirrors, PROMPT2: array of infinitely high mirrors},
+figure is conservatively dressed,
+non-skinny clothes,
+figure stands on {PROMPT1: a windswept cliff, PROMPT2: these mirrors are rising from water to the sky},
+{PROMPT1: gazing at a vast ocean bathed in the golden light of dusk,}
+mirrors borders are glowy.
+{95tDy0KrQY7TCEi-DhgD-}
