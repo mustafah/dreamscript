@@ -17,48 +17,59 @@ import { clearEmojis } from './commands/clearEmojis.command';
 import { clearTranslations } from './commands/clearTranslations.command';
 import { customizedPromptify } from './commands/customizedPromptify.command';
 import { createPrompt } from './commands/createPrompt.command';
+import { pastePrompt } from './commands/paste-prompt.command';
+import stringSimilarity from 'string-similarity';
+import { diffWords } from 'diff';
 
 export async function activate(context: vscode.ExtensionContext) {
 
-	// <ImagesPanel>
+    // <ImagesPanel>
     Globals.extensionContext = context;
     const provider = Globals.imagesPanelProvider = new ImagesPanelViewProvider(context.extensionUri);
-	context.subscriptions.push(vscode.window.registerWebviewViewProvider(ImagesPanelViewProvider.viewType, provider));
-	// </ImagesPanel>
-	
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(ImagesPanelViewProvider.viewType, provider));
+    // </ImagesPanel>
+
     // <Branch>
     const branchDisposable = vscode.commands.registerCommand('dreamscript.branch', async () => {
         await branch();
     });
     context.subscriptions.push(branchDisposable);
-	// </Branch>
+    // </Branch>
 
     // <PasteImage>
     const pasteImageDisposable = vscode.commands.registerCommand('dreamscript.pasteImage', async () => {
         await pasteImage();
     });
     context.subscriptions.push(pasteImageDisposable);
-	// </PasteImage>
-    
+    // </PasteImage>
+
     // <PasteParameters>
     const pasteParametersDisposable = vscode.commands.registerCommand('dreamscript.pasteParameters', async () => {
         await pasteParameters();
     });
     context.subscriptions.push(pasteParametersDisposable);
-	// </PasteParameters>
+    // </PasteParameters>
+
+    // <pastePrompt>
+    const pastePromptDisposable = vscode.commands.registerCommand('dreamscript.pastePrompt', async () => {
+        await pastePrompt();
+    });
+    context.subscriptions.push(pastePromptDisposable);
+    // </pastePrompt>
+
 
     // <Translate>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.translate', async () => {
         await translateCommand();
     }));
-	// </Translate>
+    // </Translate>
 
     // <Emojify>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.emojify', async () => {
         // await emojify();
         await emojifyCommand();
     }));
-	// </Emojify>
+    // </Emojify>
 
     // <Promptify>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.promptify', async () => {
@@ -70,19 +81,19 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.createPromptify', async () => {
         await createPrompt();
     }));
-	// </Promptify>
+    // </Promptify>
 
     // <Colorize>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.colorize', async () => {
         await colorize();
     }));
-	// </Colorize>
+    // </Colorize>
 
     // <ClearKeys>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearKeys', async () => {
         await Keys.removeKey('OPENAI_API_KEY');
     }));
-	// </ClearKeys>
+    // </ClearKeys>
 
     // <LLM Backend>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.selectLLMBackend', async () => {
@@ -119,10 +130,58 @@ export async function activate(context: vscode.ExtensionContext) {
         clearEmojis();
     }));
     // </ClearEmojis>
-    
+
     // <ClearTranslations>
     context.subscriptions.push(vscode.commands.registerCommand('dreamscript.clearTranslations', async () => {
         clearTranslations();
     }));
     // </ClearTranslations>
+    test();
 }
+
+function test() {
+    console.log('extension is now active!');
+    // Sample arrays
+    const A = [
+        'photorealism of A veiled figure stands before a many three vast array of mirrors',
+        'non-skinny clothes'
+    ];
+
+    const B = [
+        'photorealism of A veiled figure stands before a many five vast array of reflective surfaces',
+        'non-skinny clothes'
+    ];
+
+    // Function to get differences
+    function getDifferences(text1, text2) {
+        const differences = diffWords(text1, text2);
+        return differences.map((part, index) => ({
+            index,
+            value: part.value,
+            added: part.added,
+            removed: part.removed
+        })).filter(part => part.added || part.removed);
+    }
+
+    // Function to compare arrays semantically
+    function compareParagraphs(arrayA, arrayB) {
+        return arrayA.map(paragraphA => {
+            const bestMatch = stringSimilarity.findBestMatch(paragraphA, arrayB).bestMatch;
+
+            const differences = getDifferences(paragraphA, bestMatch.target);
+
+            return {
+                paragraph: paragraphA,
+                bestMatch: bestMatch.target,
+                similarity: bestMatch.rating,
+                differences: differences
+            };
+        });
+    }
+
+
+
+    const result = compareParagraphs(A, B);
+    console.log(result);
+}
+

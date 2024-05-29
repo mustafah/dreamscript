@@ -85,6 +85,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.pastePrompt",
+				"title": "📋📝 Paste Prompt",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.format",
 				"title": "📐🖌️ Format",
 				"category": "DreamScript"
@@ -230,6 +235,7 @@
 		"archiver-zip-encrypted": "^2.0.0",
 		"aws-sdk": "^2.717.0",
 		"crypto": "^1.0.1",
+		"diff": "^5.2.0",
 		"emoji-strip": "^1.0.1",
 		"form-data": "^4.0.0",
 		"handlebars": "^4.7.8",
@@ -237,6 +243,7 @@
 		"nanoid": "^3.3.7",
 		"save-clipboard-image": "^1.0.0",
 		"sharp": "^0.33.3",
+		"string-similarity": "^4.0.4",
 		"uuid": "^9.0.1"
 	}
 }

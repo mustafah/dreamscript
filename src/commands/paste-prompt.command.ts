@@ -49,6 +49,9 @@ export async function pastePrompt() {
 
 function formatPrompt(input: string) {
     
-    
-    return params.join('\n');
+    return input.split(/[.,;]/)
+        .map(line => line.trim())
+        .filter(line => !line.match(/^\{.*\}$/))
+        .filter(line => line.length > 0).join(',\n');
+
 }
