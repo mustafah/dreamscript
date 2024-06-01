@@ -110,6 +110,11 @@
 				"category": "DreamScript"
 			},
 			{
+				"command": "dreamscript.merge",
+				"title": "✨🔀 Merge",
+				"category": "DreamScript"
+			},
+			{
 				"command": "dreamscript.customizedPromptify",
 				"title": "💡 Customized Promptify",
 				"category": "DreamScript"

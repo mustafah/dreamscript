@@ -52,3 +52,5 @@ Original Source should only contain the images it reference, and have command to
 PASTE prompt as with each statement on its new line without the ID at the end
 
 COMPARE between scripts
+
+extract gradient colors from image

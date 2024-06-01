@@ -18,8 +18,7 @@ import { clearTranslations } from './commands/clearTranslations.command';
 import { customizedPromptify } from './commands/customizedPromptify.command';
 import { createPrompt } from './commands/createPrompt.command';
 import { pastePrompt } from './commands/paste-prompt.command';
-import stringSimilarity from 'string-similarity';
-import { diffWords } from 'diff';
+import { merge } from './commands/merge.command';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -136,52 +135,10 @@ export async function activate(context: vscode.ExtensionContext) {
         clearTranslations();
     }));
     // </ClearTranslations>
-    test();
+
+    // <Merge>
+    context.subscriptions.push(vscode.commands.registerCommand('dreamscript.merge', async () => {
+        merge();
+    }));
+    // </Merge>
 }
-
-function test() {
-    console.log('extension is now active!');
-    // Sample arrays
-    const A = [
-        'photorealism of A veiled figure stands before a many three vast array of mirrors',
-        'non-skinny clothes'
-    ];
-
-    const B = [
-        'photorealism of A veiled figure stands before a many five vast array of reflective surfaces',
-        'non-skinny clothes'
-    ];
-
-    // Function to get differences
-    function getDifferences(text1, text2) {
-        const differences = diffWords(text1, text2);
-        return differences.map((part, index) => ({
-            index,
-            value: part.value,
-            added: part.added,
-            removed: part.removed
-        })).filter(part => part.added || part.removed);
-    }
-
-    // Function to compare arrays semantically
-    function compareParagraphs(arrayA, arrayB) {
-        return arrayA.map(paragraphA => {
-            const bestMatch = stringSimilarity.findBestMatch(paragraphA, arrayB).bestMatch;
-
-            const differences = getDifferences(paragraphA, bestMatch.target);
-
-            return {
-                paragraph: paragraphA,
-                bestMatch: bestMatch.target,
-                similarity: bestMatch.rating,
-                differences: differences
-            };
-        });
-    }
-
-
-
-    const result = compareParagraphs(A, B);
-    console.log(result);
-}
-

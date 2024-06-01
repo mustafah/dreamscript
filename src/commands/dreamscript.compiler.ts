@@ -28,7 +28,7 @@ class DreamScriptCompiler {
         if (autoUniqueIDEnabled && this.isUniqueID()) {
             let uniqueID;
             if (this.isFilenameUniqueID()) {
-
+                uniqueID = path.basename(DreamScriptCompiler.lastUniqueID);
             } else {
                 uniqueID = nanoid();
             }

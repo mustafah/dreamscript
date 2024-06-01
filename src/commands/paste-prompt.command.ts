@@ -1,12 +1,5 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as path from 'path';
-import axios from 'axios';
-import { Globals } from '../globals';
-import { execSync } from 'child_process';
-import { IMAGES_REGEX } from './regex';
-
-
 
 export async function pastePrompt() {
 
