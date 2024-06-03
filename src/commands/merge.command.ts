@@ -95,7 +95,14 @@ function doMerge(A, B) {
 
     // Function to get differences
     function getDifferences(text1, text2) {
-        const differences = diffWords(text1, text2);
+        const differences = diffWords(text1, text2, {ignoreCase: true});
+        let output = "";
+        differences.forEach((part) => {
+            // green for additions, red for deletions
+            output += part.added ? `+{${part.value}}` :
+                       part.removed ? `-{${part.value}}` :
+                                      part.value;
+          });
         return differences.map((part, index) => ({
             index,
             value: part.value,
@@ -118,11 +125,11 @@ function doMerge(A, B) {
 
             differences.forEach(diff => {
                 if (diff.added) {
-                    merged += `\n+{${diff.value}}`;
+                    merged += `\n~ +{${diff.value}}`;
                 } else if (diff.removed) {
-                    merged += `\n-{${diff.value}}`;
+                    merged += `\n~ -{${diff.value}}`;
                 } else {
-                    merged += `\n?{${diff.value}}`;
+                    merged += `\n~ ?{${diff.value}}`;
                 }
                 lastIndex = diff.index + diff.value.length;
             });
@@ -154,7 +161,7 @@ function doMerge(A, B) {
     const result = compareParagraphs(A, B);
 
 
-    const mergedResult = '~=\n' + result.map((element, index) => `// ${index})\n${element.merged}`).join('\n\n');
+    const mergedResult = '~=\n' + result.map((element, index) => `// ${index})\n${element.merged}`).join(',\n\n');
 
     return mergedResult;
 }
