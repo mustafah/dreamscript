@@ -103,12 +103,13 @@ function doMerge(A, B) {
                        part.removed ? `-{${part.value}}` :
                                       part.value;
           });
-        return differences.map((part, index) => ({
-            index,
-            value: part.value,
-            added: part.added,
-            removed: part.removed
-        })).filter(part => part.added || part.removed);
+        return output;
+        // return differences.map((part, index) => ({
+        //     index,
+        //     value: part.value,
+        //     added: part.added,
+        //     removed: part.removed
+        // })).filter(part => part.added || part.removed);
     }
 
     // Function to compare arrays semantically
