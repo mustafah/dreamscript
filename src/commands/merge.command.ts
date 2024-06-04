@@ -99,8 +99,8 @@ function doMerge(A, B) {
         let output = "";
         differences.forEach((part) => {
             // green for additions, red for deletions
-            output += part.added ? `+{${part.value}}` :
-                       part.removed ? `-{${part.value}}` :
+            output += part.added ? `++{${part.value}}++` :
+                       part.removed ? `--${part.value}--` :
                                       part.value;
           });
         return output;

@@ -3,14 +3,15 @@ progressive=False
 chunk="None"
 question="
 
-    JsGoogleTranslateFree is imported as undefined although I installed it !
+we want try dtaidistance algorithm for  DTW subsequence alignment
+we want simulate some realistic looking signal but it easy to debug visually we we are searching subsections of it,
+can you suggest 3 signals to create SensorySeries out from it
 
 "
 
 file_list="
 
-    C:\Users\mohamus03\Projects\dreamscript\src\commands\translate.command.ts
-    C:\Users\mohamus03\Projects\dreamscript\package.json
+  C:\Users\mohamus03\Projects\FEGeosCLI\main_from_simple_shapes.py
 
 "
 
