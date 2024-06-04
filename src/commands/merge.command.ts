@@ -121,19 +121,19 @@ function doMerge(A, B) {
                 return { merged: paragraphA };
             }
             const differences = getDifferences(paragraphA, bestMatch.target);
-            let merged = paragraphA;
-            let lastIndex = 0;
+            // let merged = paragraphA;
+            // let lastIndex = 0;
 
-            differences.forEach(diff => {
-                if (diff.added) {
-                    merged += `\n~ +{${diff.value}}`;
-                } else if (diff.removed) {
-                    merged += `\n~ -{${diff.value}}`;
-                } else {
-                    merged += `\n~ ?{${diff.value}}`;
-                }
-                lastIndex = diff.index + diff.value.length;
-            });
+            // (differences as any).forEach(diff => {
+            //     if (diff.added) {
+            //         merged += `\n~ +{${diff.value}}`;
+            //     } else if (diff.removed) {
+            //         merged += `\n~ -{${diff.value}}`;
+            //     } else {
+            //         merged += `\n~ ?{${diff.value}}`;
+            //     }
+            //     lastIndex = diff.index + diff.value.length;
+            // });
 
             // merged += paragraphA.slice(lastIndex);
             matchedIndices.add(arrayB.indexOf(bestMatch.target));
@@ -142,8 +142,7 @@ function doMerge(A, B) {
                 paragraph: paragraphA,
                 bestMatch: bestMatch.target,
                 similarity: bestMatch.rating,
-                differences: differences,
-                merged: merged,
+                merged: differences,
             };
         });
 
