@@ -118,7 +118,7 @@ function doMerge(A, B) {
         const mergedParagraphs = arrayA.map(paragraphA => {
             const bestMatch = stringSimilarity.findBestMatch(paragraphA, arrayB).bestMatch;
             if (bestMatch.rating < 0.7) {
-                return { merged: paragraphA };
+                return { source: 'A only', merged: paragraphA };
             }
             const differences = getDifferences(paragraphA, bestMatch.target);
             // let merged = paragraphA;
@@ -143,12 +143,16 @@ function doMerge(A, B) {
                 bestMatch: bestMatch.target,
                 similarity: bestMatch.rating,
                 merged: differences,
+                source: bestMatch.rating == 1 ? 'A == B' : 'A ∩ B',
             };
         });
 
         arrayB.forEach((paragraphB, index) => {
             if (!matchedIndices.has(index)) {
-                mergedParagraphs.push({ merged: `${paragraphB}` });
+                mergedParagraphs.push({
+                    merged: `${paragraphB}`,
+                    source: 'B only'
+                });
             }
         });
 
@@ -161,7 +165,7 @@ function doMerge(A, B) {
     const result = compareParagraphs(A, B);
 
 
-    const mergedResult = '~=\n' + result.map((element, index) => `// ${index})\n${element.merged}`).join(',\n\n');
+    const mergedResult = '~=\n' + result.map((element, index) => `// ${index}) ${element.source}\n${element.merged}`).join(',\n\n');
 
     return mergedResult;
 }

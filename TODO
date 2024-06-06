@@ -54,3 +54,7 @@ PASTE prompt as with each statement on its new line without the ID at the end
 COMPARE between scripts
 
 extract gradient colors from image
+
+bestMatch.rating can be settings in the configuration
+
+Name the merge sources
