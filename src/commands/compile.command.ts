@@ -9,7 +9,7 @@ export async function compileCommand() {
 		const dreamFilePath = editor.document.uri.fsPath;
 		const content = fs.readFileSync(dreamFilePath, 'utf8');
 
-        const compiler = new DreamScriptCompiler(content);
+        const compiler = new DreamScriptCompiler(content, dreamFilePath);
         const compiledContent = compiler.compile();
 
         await vscode.env.clipboard.writeText(compiledContent.prompt);

@@ -10,7 +10,7 @@ class DreamScriptCompiler {
     private promptLines: string[] = [];
     private variables: any = {};
     static lastUniqueID;
-    constructor(private input: string = null) {}
+    constructor(private input: string = null, private path: string = null) {}
 
     compile({autoUniqueIDEnabled = true} = {}) {
         const lines = this.input.split('\n');
@@ -28,7 +28,9 @@ class DreamScriptCompiler {
         if (autoUniqueIDEnabled && this.isUniqueID()) {
             let uniqueID;
             if (this.isFilenameUniqueID()) {
-                uniqueID = path.basename(DreamScriptCompiler.lastUniqueID);
+                // uniqueID = crypto.createHash('sha256').update(path.basename(this.path)).digest('hex');
+                uniqueID = crypto.createHash('md5').update(path.basename(this.path)).digest('hex').substring(0, 16);
+                // uniqueID = crypto.createHash('sha256').update(path.basename(this.path)).digest('hex');
             } else {
                 uniqueID = nanoid();
             }
@@ -39,11 +41,15 @@ class DreamScriptCompiler {
     }
 
     isUniqueID() {
-        return ['ON', 'TRUE', 'AUTO', 'FILENAME', 'FILE'].includes(this.variables['Unique ID']?.toUpperCase());
+        return [
+            'ON', 'TRUE', 'AUTO',
+            'FILENAME', 'DREAMFILE', 'DREAMFILEPATH'
+        ].includes(this.variables['Unique ID']?.toUpperCase()?.replace(/\s/g, ''));
+        
     }
 
     isFilenameUniqueID() {
-        return ['FILENAME', 'FILE'].includes(this.variables['Unique ID']?.toUpperCase());
+        return ['FILENAME', 'DREAMFILE', 'DREAMFILEPATH'].includes(this.variables['Unique ID']?.toUpperCase()?.replace(/\s/g, ''));
     }
 
     clearEmojis() {
@@ -109,7 +115,7 @@ class DreamScriptCompiler {
             const titleize = function(str) {
                 return str.replace(/\b\w/g, char => char.toUpperCase());
             };
-            const variableName = titleize(assignmentMatch[1].trim());
+            const variableName = titleize(assignmentMatch[1].trim().replace(/\s/g, ' '));
             const expression = assignmentMatch[2].trim();
             try {
                 this.variables[variableName] = eval(expression);
