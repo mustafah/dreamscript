@@ -9,7 +9,6 @@ import { promptifyCommandTemplate } from "./promptify.template";
 import { customPromptifyCommandTemplate } from "./custom-promptify.template";
 
 export async function customizedPromptify() {
-    const maxLength: number = 160;
 
     const editor = vscode.window.activeTextEditor;
     if (!editor) return;
