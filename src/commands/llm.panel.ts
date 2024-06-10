@@ -145,7 +145,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
         const masonryScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'masonry.pkgd.min.js'));
         const imagesPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'images.panel.wvjs'));
-        const stylesMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'main.css'));
+        const stylesLLMUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm.css'));
         const imagesloadedScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'imagesloaded.pkgd.min.js'));
 
         const contextScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'context.min.js'));
@@ -175,14 +175,15 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Dreamscript Images</title>
-                <link href="${stylesMainUri}" rel="stylesheet">
+                <link href="${stylesLLMUri}" rel="stylesheet">
                 <script src="${imagesloadedScriptUri}"></script>
                 <script src="${masonryScriptUri}"></script>
             </head>
             <body>
-                <div class="grid">
-                    ${imageTags}
-                </div>
+
+
+
+                <textarea id="w3review" name="w3review" rows="4" cols="50" placeholder="Enter your prompts"></textarea> 
 
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
