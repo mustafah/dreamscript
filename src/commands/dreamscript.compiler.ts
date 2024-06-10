@@ -10,10 +10,24 @@ class DreamScriptCompiler {
     private promptLines: string[] = [];
     private variables: any = {};
     static lastUniqueID;
-    constructor(private input: string = null, private path: string = null) {}
+    constructor(private input: string = null, private path: string = null, private snippetMode = false) {}
 
     compile({autoUniqueIDEnabled = true} = {}) {
         const lines = this.input.split('\n');
+
+        lines.forEach((line, index) => {
+            lines[index] = line.trim();
+        });
+
+        if (this.snippetMode) {
+            if (lines.filter(line => line !== '' && !this.processCommentLine(line)).length === 0) {
+                lines.forEach((line, index) => {
+                    lines[index] = line.replace(/^\/\//, '');
+                });
+            }
+        }
+
+
         for (let line of lines) {
             line = line.trim();
             if (!this.processScriptLine(line)) {

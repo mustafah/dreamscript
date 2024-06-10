@@ -23,6 +23,8 @@ export async function customizedPromptify() {
         vscode.window.showInformationMessage("No text selected. Please select text to promptify.");
         return;
     }
+
+    
     
     const maxLines = await Configs.getConfig('promptifyMaxLines');
 

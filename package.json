@@ -51,6 +51,11 @@
 					"id": "myCustomViewContainer",
 					"title": "✨ Images",
 					"icon": "icons/images.svg"
+				},
+				{
+					"id": "llmViewContainer",
+					"title": "📖 LLM",
+					"icon": "icons/images.svg"
 				}
 			]
 		},
@@ -59,6 +64,13 @@
 				{
 					"type": "webview",
 					"id": "dreamscript.imagesView",
+					"name": "Dreamscript"
+				}
+			],
+			"llmViewContainer": [
+				{
+					"type": "webview",
+					"id": "dreamscript.llmView",
 					"name": "Dreamscript"
 				}
 			]

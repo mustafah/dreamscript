@@ -19,6 +19,7 @@ import { customizedPromptify } from './commands/customizedPromptify.command';
 import { createPrompt } from './commands/createPrompt.command';
 import { pastePrompt } from './commands/paste-prompt.command';
 import { merge } from './commands/merge.command';
+import { LLMPanelViewProvider } from './commands/llm.panel';
 
 export async function activate(context: vscode.ExtensionContext) {
 
@@ -28,6 +29,12 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.window.registerWebviewViewProvider(ImagesPanelViewProvider.viewType, provider));
     // </ImagesPanel>
 
+    // <LLMPanel>
+    Globals.extensionContext = context;
+    const provider2 = Globals.llmPanelProvider = new LLMPanelViewProvider(context.extensionUri);
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider(LLMPanelViewProvider.viewType, provider2));
+    // </LLMPanel>
+    
     // <Branch>
     const branchDisposable = vscode.commands.registerCommand('dreamscript.branch', async () => {
         await branch();
