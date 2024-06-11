@@ -5,6 +5,7 @@ import { IMAGES_REGEX } from './regex';
 import { readMetadata } from './metadata';
 import { promptForMetadata } from './prompt';
 import { deleteImage } from './delete.command';
+import { Globals } from '../globals';
 
 export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'dreamscript.llmView';
@@ -182,8 +183,11 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             <body>
 
 
+                ${Globals.llmConversation.map((message) => {
+                    return `<p>${message.role}: ${message.content}</p>`;
+                })}
 
-                <textarea id="w3review" name="w3review" rows="4" cols="50" placeholder="Enter your prompts"></textarea> 
+                <textarea id="query" placeholder="Enter your prompts"></textarea> 
 
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
