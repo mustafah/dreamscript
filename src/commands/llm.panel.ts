@@ -182,11 +182,13 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             </head>
             <body>
 
-
-                ${Globals.llmConversation.map((message) => {
-                    return `<p>${message.role}: ${message.content}</p>`;
-                })}
-
+                <div class="conversation">
+                    ${Globals.llmConversation.map((message) => {
+                        return `<div class="message">
+                            <p>${message.role}: ${message.content}</p>
+                        </div>`;
+                    }).join('')}
+                </div>
                 <textarea id="query" placeholder="Enter your prompts"></textarea> 
 
                 <link href="${stylesContextUri}" rel="stylesheet">
