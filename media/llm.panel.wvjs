@@ -1,0 +1,22 @@
+//@ts-check
+
+(function(){
+	const vscode = acquireVsCodeApi();
+
+	document.getElementById('query').addEventListener('keydown', function(event) {
+		if (event.key === 'Enter') {
+			event.preventDefault();
+			const content = event.target.value;
+			if (content.trim()) {
+				vscode.postMessage({
+					command: 'addMessage',
+					message: {
+						role: 'dreamscript',
+						content: content.trim()
+					}
+				});
+				event.target.value = '';
+			}
+		}
+	});
+}());

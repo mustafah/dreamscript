@@ -3,12 +3,12 @@ progressive=False
 chunk="None"
 question="
 
-    hello
-
+When the user write inside the text area we want when user write something and press enter it will be added a new message to the globals llmConversation
 "
 
 file_list="
 
-    C:\Users\mohamus03\Projects\dreamscript\src\extension.ts
+    src/commands/llm.panel.ts
+    src/globals.ts
 
 "

@@ -43,76 +43,14 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
         }
 
         this._view.webview.onDidReceiveMessage(async (message) => {
-            if (message.command === 'updateMetadata') this.updateMetadata(message);
-            else if (message.command === 'openImage') this.openImage(message.path);
-            else if (message.command === 'createOrOpenMetadata') await this.createOrOpenMetadataFile(message.path);
-            else if (message.command === 'deleteImage') deleteImage(message.path);
-            else if (message.command === 'openOriginal') await this.openOriginalDreamFile(message.path);
+            if (message.command === 'addMessage') this.addMessage(message.message);
         });
         
     }
 
-    private async openOriginalDreamFile(imageName) {
-        const originalFileUri = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images', `${imageName}.original.dream`);
-        try {
-            const document = await vscode.workspace.openTextDocument(originalFileUri);
-            await vscode.window.showTextDocument(document);
-        } catch (error) {
-            vscode.window.showErrorMessage(`The original source file does not exist: ${imageName}`);
-        }
-    }
-
-    private async createOrOpenMetadataFile(imageName) {
-        const workspaceRoot = vscode.workspace.rootPath;
-        const imageDir = path.join(workspaceRoot, 'images');
-
-        // const imageDir = path.dirname(imagePath);
-        // const imageName = path.basename(imagePath, path.extname(imagePath));
-        const metaFilePath = path.join(imageDir, `${imageName}.metadata.txt`);
-
-        const metaFileUri = vscode.Uri.file(metaFilePath);
-    
-        // Check if the file exists, if not create an empty file
-        try {
-            await vscode.workspace.fs.stat(metaFileUri);
-        } catch (error) {
-            await vscode.workspace.fs.writeFile(metaFileUri, new Uint8Array());
-        }
-    
-        // Open the file in a new editor tab
-        const document = await vscode.workspace.openTextDocument(metaFileUri);
-        await vscode.window.showTextDocument(document);
-    }
-
-    // Function to open the image file
-    private openImage(imagePath) {
-        const imageUri = vscode.Uri.file(imagePath);
-        vscode.commands.executeCommand('vscode.open', imageUri);
-    }
-    private updateMetadata(message: any) {
-        const workspaceRoot = vscode.workspace.rootPath;
-        const metadataFilePath = path.join(workspaceRoot, 'images', 'metadata.json');
-        
-        let existingData = {};
-    
-        try {
-            if (fs.existsSync(metadataFilePath)) {
-                const fileContent = fs.readFileSync(metadataFilePath, 'utf8');
-                existingData = JSON.parse(fileContent);
-            }
-        } catch (error) {
-            console.error('Error reading or parsing metadata.json:', error);
-            // Handle the error or notify the user as necessary
-        }
-    
-        // Update with new data
-        existingData[message.path] = { ...existingData[message.path], ...message.data };
-    
-        try {
-            fs.writeFileSync(metadataFilePath, JSON.stringify(existingData, null, 2), 'utf8');
-        } catch (error) {
-            console.error('Error writing to metadata.json:', error);
-        }
+    private addMessage(newMessage: { role: string, content: string }) {
+        Globals.llmConversation.push(newMessage);
+        this.updateWebviewContent(""); // Refresh the webview with the new message
     }
 
     public async updateWebviewContent(documentOrString: vscode.TextDocument | string) {
@@ -144,10 +82,9 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
     private getHtmlForWebview(webview: vscode.Webview, imagePaths: string[]): string {
 
-        const masonryScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'masonry.pkgd.min.js'));
-        const imagesPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'images.panel.wvjs'));
+        const llmPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm.panel.wvjs'));
         const stylesLLMUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm.css'));
-        const imagesloadedScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'imagesloaded.pkgd.min.js'));
+        const stylesLLM2Uri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm2.css'));
 
         const contextScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'context.min.js'));
         const stylesContextUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'skins', 'hackerman.css'));
@@ -177,24 +114,38 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Dreamscript Images</title>
                 <link href="${stylesLLMUri}" rel="stylesheet">
-                <script src="${imagesloadedScriptUri}"></script>
-                <script src="${masonryScriptUri}"></script>
+                <link href="${stylesLLM2Uri}" rel="stylesheet">
             </head>
             <body>
-
+                <div class="llm-container">
                 <div class="conversation">
+
                     ${Globals.llmConversation.map((message) => {
                         return `<div class="message">
-                            <p>${message.role}: ${message.content}</p>
+                                ${message.role.toLocaleLowerCase() === 'dreamscript' ? `<div class="role">${message.role}</div>` : ``}
+                                <div class="content ${message.role}">${message.content}</div>
                         </div>`;
                     }).join('')}
                 </div>
-                <textarea id="query" placeholder="Enter your prompts"></textarea> 
+                <div class="attachments">
+                    ${Globals.llmConversationAttachments.map((attachment, index) => {
+                        return `<div class="attachment">
+                        <div class="attachment-title">[prompt${index}]</div>
+                                ${attachment.content}
+                                </div>`;
+                    }).join('')}
+                </div>
+                
 
+                <div id="chat-input">
+                    <div id="file-input"></div>
+                    <textarea id="query" placeholder=""></textarea>
+                </div>
+                </div>
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
                 <!---->
-                <script src="${imagesPanelScriptUri}"></script>
+                <script src="${llmPanelScriptUri}"></script>
             </body>
             </html>
         `;
