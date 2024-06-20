@@ -129,10 +129,11 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 </div>
                 <div class="attachments">
                     ${Globals.llmConversationAttachments.map((attachment, index) => {
-                        return `<div class="attachment">
-                        <div class="attachment-title">[prompt${index}]</div>
-                                ${attachment.content}
-                                </div>`;
+                        // return `<div class="attachment">
+                        // <div class="attachment-title">[prompt${index}]</div>
+                        //         ${attachment.content}
+                        //         </div>`;
+                        return `<div class="rich-body" style="opacity: 1; transform: translateY(0px);"></div>`;
                     }).join('')}
                 </div>
                 

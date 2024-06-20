@@ -71,3 +71,6 @@ textarea {
 }
 
 
+.attachments {
+    width: calc(100% - 24px);
+}
