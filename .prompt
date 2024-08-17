@@ -1,14 +1,15 @@
 percent="100%"
 progressive=False
 chunk="None"
+
 question="
 
-When the user write inside the text area we want when user write something and press enter it will be added a new message to the globals llmConversation
+    we want chunkText to be yielded to the caller until finished
+
 "
 
 file_list="
-
-    src/commands/llm.panel.ts
-    src/globals.ts
+    /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
+    #/Users/mustafah/Desktop/FastDtw.CSharp/Playground/SensorySeries.cs
 
 "

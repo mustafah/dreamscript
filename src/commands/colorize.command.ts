@@ -6,6 +6,7 @@ import { Keys } from "./keys";
 import { Configs } from "./configs";
 import { emojifyCommandTemplate } from "./emojify.template";
 import { promptifyCommandTemplate } from "./promptify.template";
+import { Globals } from "../globals";
 
 export async function colorize() {
     const maxLength: number = 160;
@@ -44,7 +45,7 @@ export async function colorize() {
                 const endPosition = selection.end;
 
                 try {
-                    const responseJson = JSON.parse(response.replace(/^```json/, '').replace(/```$/, ''));
+                    const responseJson = JSON.parse((response as any).replace(/^```json/, '').replace(/```$/, ''));
                     const keys = Object.keys(responseJson);
                     keys.forEach(key => {
                         let k = key;

@@ -6,6 +6,8 @@ export class Globals {
   public static imagesPanelProvider: ImagesPanelViewProvider | null = null;
   public static llmPanelProvider: LLMPanelViewProvider | null = null;
   public static extensionContext: vscode.ExtensionContext | null = null;
+
+  public static currentStreamReply = "";
   public static llmConversation = [
     {
       role: "dreamscript",
@@ -20,12 +22,48 @@ export class Globals {
       content: "Can you give me more variations on this 2 ?",
     },
     {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
+    },
+    {
       role: "dreamscript",
       content: "Can you give me more variations on this 3 ?",
     },
     {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
+    },
+    {
       role: "dreamscript",
       content: "Can you give me more variations on this 4 ?",
+    },
+    {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
+    },
+    {
+      role: "dreamscript",
+      content: "Can you give me more variations on this 4 ?",
+    },
+    {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
+    },
+    {
+      role: "dreamscript",
+      content: "Can you give me more variations on this 4 ?",
+    },
+    {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
+    },
+    {
+      role: "dreamscript",
+      content: "Can you give me more variations on this 4 ?",
+    },
+    {
+      role: "llm",
+      content: "Here is 1, 2 and three ..",
     }
   ];
 

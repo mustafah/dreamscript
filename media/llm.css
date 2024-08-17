@@ -1,3 +1,6 @@
+body {
+    padding: 0 8px;
+}
 .content {
     background: rgb(255 255 255 / 10%);
     padding: 8px;
@@ -22,14 +25,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    --query-height: 32px;
+    --query-height: 44px;
 }
 
 .conversation {
-    overflow-y: scroll;
+    padding-top: 8px;
+    /* overflow-y: scroll;
     height: 100%;
     padding-bottom: var(--query-height);
-    width: calc(100% - 24px);
+    width: calc(100% - 24px); */
+    overflow-y: scroll;
+    height: 100%;
+    margin-bottom: var(--query-height);
+    width: 100%;
+    /* background: fuchsia; */
 }
 
 textarea {

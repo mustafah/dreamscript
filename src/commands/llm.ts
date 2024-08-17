@@ -3,7 +3,9 @@ import { Keys } from './keys';
 import axios from 'axios';
 import { Configs } from './configs';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Globals } from '../globals';
 
+declare let document;
 export async function llm(question: string) {
     console.log('Dreamscript.Prompt ?', question);
     const backendChoice = await Configs.getConfig('llmBackend');
@@ -36,13 +38,23 @@ export async function llm(question: string) {
             const genAI = new GoogleGenerativeAI(googleGeminiApiKey);
             // For text-only input, use the gemini-pro model
             const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-    
-            const prompt = "Write a story about a magic backpack.";
-    
-            const result = await model.generateContent(question);
-            const response = await result.response;
-            const text = response.text();
-            return text;
+
+            const stream = true;
+            if (stream) {
+                const result = await model.generateContentStream(question);
+
+                for await (const chunk of result.stream) {
+                    const chunkText = chunk.text();
+                    console.log(chunkText);
+                    document.getElementsByClassName("streamed")[0].textContent += chunk;
+                    Globals.currentStreamReply += chunk;
+                }
+            } else {
+                const result = await model.generateContent(question);
+                const response = await result.response;
+                const text = response.text();
+                return text;
+            }
         } catch (error) {
             console.error("Error with Google Gemini:", error);
             throw error;

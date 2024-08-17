@@ -6,6 +6,7 @@ import { readMetadata } from './metadata';
 import { promptForMetadata } from './prompt';
 import { deleteImage } from './delete.command';
 import { Globals } from '../globals';
+import { llm } from './llm';
 
 export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     public static readonly viewType = 'dreamscript.llmView';
@@ -41,9 +42,10 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
         if (activeEditor && activeEditor.document.languageId === 'dreamscript') {
             this.updateWebviewContent(activeEditor.document);
         }
-
         this._view.webview.onDidReceiveMessage(async (message) => {
             if (message.command === 'addMessage') this.addMessage(message.message);
+            const response = await llm(message.message.content);
+            console.log(response);
         });
         
     }
@@ -59,7 +61,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             ? documentOrString 
             : documentOrString.getText();
             const imagePaths = this.extractImagePaths(documentText);
-            this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths); // Reset to actual content
+            this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths); // Reset to actual 
 
             const metadata = await readMetadata();
             this._view.webview.postMessage({ command: 'loadMetadata', data: metadata });
@@ -118,6 +120,8 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             </head>
             <body>
                 <div class="llm-container">
+
+                
                 <div class="conversation">
 
                     ${Globals.llmConversation.map((message) => {
@@ -126,22 +130,17 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                                 <div class="content ${message.role}">${message.content}</div>
                         </div>`;
                     }).join('')}
+
+                    <div class="streamed message">
+                    </div>
                 </div>
-                <div class="attachments">
-                    ${Globals.llmConversationAttachments.map((attachment, index) => {
-                        // return `<div class="attachment">
-                        // <div class="attachment-title">[prompt${index}]</div>
-                        //         ${attachment.content}
-                        //         </div>`;
-                        return `<div class="rich-body" style="opacity: 1; transform: translateY(0px);"></div>`;
-                    }).join('')}
-                </div>
-                
+
 
                 <div id="chat-input">
                     <div id="file-input"></div>
                     <textarea id="query" placeholder=""></textarea>
                 </div>
+
                 </div>
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
