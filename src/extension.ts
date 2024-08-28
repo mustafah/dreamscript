@@ -20,9 +20,35 @@ import { createPrompt } from './commands/createPrompt.command';
 import { pastePrompt } from './commands/paste-prompt.command';
 import { merge } from './commands/merge.command';
 import { LLMPanelViewProvider } from './commands/llm.panel';
+import axios from 'axios';
 
+function test() {
+    const api = axios.create({
+        baseURL: 'http://localhost:11434/api',
+      });
+      
+      const data = {
+        model: 'llama3.1',
+        prompt: 'Why is the sky blue?',
+        stream: true,
+      };
+      
+      api.post('generate', JSON.stringify(data), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+      
+}
 export async function activate(context: vscode.ExtensionContext) {
 
+    test();
     // <ImagesPanel>
     Globals.extensionContext = context;
     const provider = Globals.imagesPanelProvider = new ImagesPanelViewProvider(context.extensionUri);
