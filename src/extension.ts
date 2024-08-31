@@ -22,33 +22,104 @@ import { merge } from './commands/merge.command';
 import { LLMPanelViewProvider } from './commands/llm.panel';
 import axios from 'axios';
 
-function test() {
+async function test2() {
+    try {
+        const response = await axios.post('http://localhost:11434/api/generate', {
+            model: 'llama3.1',
+            prompt: 'give me steps I need to learn c# ?',
+            stream: true
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            responseType: 'stream'
+        });
+
+        response.data.on('data', (chunk) => {
+            const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
+            for (const line of lines) {
+                const parsed = JSON.parse(line);
+                if (parsed.response) {
+                    console.log(parsed);
+                    // res.write(`data: ${JSON.stringify({ token: parsed.response })}\n\n`);
+                }
+            }
+        });
+
+        response.data.on('end', () => {
+            console.log('end');
+            // res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+            // res.end();
+        });
+
+    } catch (error) {
+        console.error('Error calling OLLAMA API:', error);
+        // res.write(`data: ${JSON.stringify({ error: 'Error generating response' })}\n\n`);
+        // res.end();
+    }
+}
+async function test() {
     const api = axios.create({
         baseURL: 'http://localhost:11434/api',
       });
       
       const data = {
         model: 'llama3.1',
-        prompt: 'Why is the sky blue?',
+        prompt: 'give me steps I need to learn c# ?',
         stream: true,
       };
       
-      api.post('generate', JSON.stringify(data), {
+    //   const response = await api.post('generate', JSON.stringify(data), {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       responseType: 'stream'
+    //     },
+    //   });
+
+    //   const stream = response.data;
+    // // //
+    api.post('generate', JSON.stringify(data), {
         headers: {
           'Content-Type': 'application/json',
+          responseType: 'stream'
         },
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+      }).then(response => {
+        const stream = response.data;
+        
+        stream.on("data", chunk => {
+        //   APIdata.push(chunk)
+            console.log(chunk);
+        });
+        
+        stream.on("end", () => {
+            console.log("end of stream");
+        });
+    });
+    //   stream.then(data => { 
+    //     // data = data.toString();
+    //     console.log(data);
+    //   });
+    //   .then(response => {
+    //     console.log(response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error(error);
+    //   });
+
+    //   const response = await axios.get(`https://stream.example.com`, {
+    //     headers: {Authorization: `Bearer ${token}`}, 
+    //     responseType: 'stream'
+    //   });
       
+    //   const stream = response.data
+    //   stream.on('data', data => { 
+    //     data = data.toString()
+    //     console.log(data) 
+    //   })
 }
 export async function activate(context: vscode.ExtensionContext) {
 
-    test();
+    test2();
     // <ImagesPanel>
     Globals.extensionContext = context;
     const provider = Globals.imagesPanelProvider = new ImagesPanelViewProvider(context.extensionUri);
