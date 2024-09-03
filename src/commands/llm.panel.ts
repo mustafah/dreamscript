@@ -27,6 +27,10 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             }
         });
     }
+    
+    public postMessage(message: any) {
+        this._view.webview.postMessage(message);
+    }
 
     public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
         this._view = webviewView;

@@ -119,7 +119,10 @@ async function test() {
 }
 export async function activate(context: vscode.ExtensionContext) {
 
-    test2();
+    setTimeout(() => {
+        Globals.llmPanelProvider.postMessage({ command: 'addLLMResponseChunk', data: "hello" });
+    }, 2000);
+
     // <ImagesPanel>
     Globals.extensionContext = context;
     const provider = Globals.imagesPanelProvider = new ImagesPanelViewProvider(context.extensionUri);

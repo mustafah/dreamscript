@@ -29,7 +29,14 @@
 					const messages = document.getElementsByClassName("message");
 					messages[messages.length - 1].scrollIntoView();
                     break;
-                // ... handle other messages
+                case 'addLLMResponseChunk':
+					const streamed = document.getElementsByClassName("streamed");
+					console.log("hello ***")
+					console.log(event);
+					debugger;
+					const content = event.target.value;
+					streamed[0].innerHTML += content;
+                    break;
             }
         });
 	});
