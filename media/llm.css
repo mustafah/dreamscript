@@ -83,3 +83,8 @@ textarea {
 .attachments {
     width: calc(100% - 24px);
 }
+
+.streamed {
+    width: 100%;
+    text-wrap: wrap;
+}

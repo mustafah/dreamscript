@@ -1,4 +1,7 @@
-//@ts-check
+/* eslint-disable no-debugger */
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-undef */
+// @ts-nocheck
 
 (function(){
 	const vscode = acquireVsCodeApi();
@@ -31,11 +34,14 @@
                     break;
                 case 'addLLMResponseChunk':
 					const streamed = document.getElementsByClassName("streamed");
-					console.log("hello ***")
+					// console.log("hello ***");
+					// console.log(streamed);
+					// debugger;
 					console.log(event);
-					debugger;
-					const content = event.target.value;
+					const content = event.data.data;
 					streamed[0].innerHTML += content;
+					// streamed[0].innerHTML += content;
+					
                     break;
             }
         });
