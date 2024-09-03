@@ -22,6 +22,7 @@ import { merge } from './commands/merge.command';
 import { LLMPanelViewProvider } from './commands/llm.panel';
 import axios from 'axios';
 
+declare const document;
 async function test2() {
     try {
         const response = await axios.post('http://localhost:11434/api/generate', {
@@ -40,7 +41,9 @@ async function test2() {
             for (const line of lines) {
                 const parsed = JSON.parse(line);
                 if (parsed.response) {
-                    console.log(parsed);
+                    const res = parsed.response;
+                    console.log(res);
+                    document.getElementsByClassName("streamed")[0].textContent += res;
                     // res.write(`data: ${JSON.stringify({ token: parsed.response })}\n\n`);
                 }
             }
