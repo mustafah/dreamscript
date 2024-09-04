@@ -135,8 +135,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                         </div>`;
                     }).join('')}
 
-                    <div class="streamed message">
-                    </div>
+                    <pre class="streamed message"></pre>
                 </div>
 
 

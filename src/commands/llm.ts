@@ -12,7 +12,9 @@ export async function llm(question: string) {
     console.log('Dreamscript.Prompt ?', question);
     const backendChoice = await Configs.getConfig('llmBackend');
 
-    if (backendChoice.toLowerCase().includes('mistral')) {
+    if (backendChoice.toLowerCase().includes('llama')) {
+        ollama(question);
+    } else if (backendChoice.toLowerCase().includes('mistral')) {
         // Use Ollama Mistral
         const data = JSON.stringify({ "model": "mistral", "prompt": question, "options": {"temperature": 0}, "stream": false });
         const config = {
@@ -75,5 +77,45 @@ export async function llm(question: string) {
             console.error("Error with OpenAI:", error);
             throw error;
         }
+    }
+}
+
+async function ollama(question) {
+    try {
+        const response = await axios.post('http://localhost:11434/api/generate', {
+            model: 'llama3.1',
+            prompt: question,
+            stream: true
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            responseType: 'stream'
+        });
+
+        response.data.on('data', (chunk) => {
+            const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
+            for (const line of lines) {
+                const parsed = JSON.parse(line);
+                if (parsed.response) {
+                    const res = (parsed.response);
+                    console.log(res);
+                    Globals.llmPanelProvider.postMessage({ command: 'addLLMResponseChunk', data: res });
+                    // document.getElementsByClassName("streamed")[0].textContent += res;
+                    // res.write(`data: ${JSON.stringify({ token: parsed.response })}\n\n`);
+                }
+            }
+        });
+
+        response.data.on('end', () => {
+            console.log('end');
+            // res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+            // res.end();
+        });
+
+    } catch (error) {
+        console.error('Error calling OLLAMA API:', error);
+        // res.write(`data: ${JSON.stringify({ error: 'Error generating response' })}\n\n`);
+        // res.end();
     }
 }
