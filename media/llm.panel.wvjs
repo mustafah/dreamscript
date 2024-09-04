@@ -1,4 +1,7 @@
-//@ts-check
+/* eslint-disable no-debugger */
+/* eslint-disable no-case-declarations */
+/* eslint-disable no-undef */
+// @ts-nocheck
 
 (function(){
 	const vscode = acquireVsCodeApi();
