@@ -47,16 +47,23 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             this.updateWebviewContent(activeEditor.document);
         }
         this._view.webview.onDidReceiveMessage(async (message) => {
-            if (message.command === 'addMessage') this.addMessage(message.message);
-            const response = await llm(message.message.content);
-            console.log(response);
+            if (message.command === 'storeLLMResponse') {
+                const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
+                Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
+                this.updateWebviewContent(""); // Refresh the webview with the new message
+            }
+            else if (message.command === 'askLLM') {
+                const question = message.message.content;
+                const response = await llm(question);
+                Globals.llmConversation.push({role: 'dreamscript', content: question});
+                this.updateWebviewContent(""); 
+            }
         });
         
     }
 
     private addMessage(newMessage: { role: string, content: string }) {
-        Globals.llmConversation.push(newMessage);
-        this.updateWebviewContent(""); // Refresh the webview with the new message
+
     }
 
     public async updateWebviewContent(documentOrString: vscode.TextDocument | string) {

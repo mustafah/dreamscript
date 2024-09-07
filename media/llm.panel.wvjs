@@ -5,17 +5,17 @@
 
 (function(){
 	const vscode = acquireVsCodeApi();
-
+	let question = '';
 	document.getElementById('query').addEventListener('keydown', function(event) {
 		if (event.key === 'Enter') {
 			event.preventDefault();
-			const content = event.target.value;
-			if (content.trim()) {
+			question = event.target.value.trim();
+			if (question) {
 				vscode.postMessage({
-					command: 'addMessage',
+					command: 'askLLM',
 					message: {
 						role: 'dreamscript',
-						content: content.trim()
+						content: question
 					}
 				});
 				event.target.value = '';
@@ -25,12 +25,14 @@
 	});
 	document.addEventListener('DOMContentLoaded', (event) => {
 		const loadingAnimation = document.getElementsByClassName("loadingAnimation");
+		const streamedRaw = document.getElementsByClassName("streamedRaw");
+		let model = "";
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
                 case 'loadMetadata':
-					const messages = document.getElementsByClassName("message");
-					messages[messages.length - 1].scrollIntoView();
+					// const messages = document.getElementsByClassName("message");
+					loadingAnimation[0].scrollIntoView();
                     break;
 				////
 				case 'startLLMResponseChunk':
@@ -38,15 +40,24 @@
 					break;
 				case 'endLLMResponseChunk':
 					loadingAnimation[0].classList.remove("in");
+					
+					vscode.postMessage({
+						command: 'storeLLMResponse',
+						message: {
+							role: 'dreamscript',
+							question: question,
+							model: model,
+							response: streamedRaw[0].innerHTML
+						}
+					});
 					break;
                 case 'addLLMResponseChunk':
 					// Optimize selection
-					const streamedRaw = document.getElementsByClassName("streamedRaw");
 					const streamed = document.getElementsByClassName("streamed");
 					const streamedRole = document.getElementsByClassName("streamedRole");
 					loadingAnimation[0].classList.add("in");
 					const content = event.data.data.response;
-					const model = event.data.data.model;
+					model = event.data.data.model;
 					streamedRole[0].innerHTML = "˜”*°•.˜”*°• " + model + " •°*”˜.•°*”˜";
 					streamedRaw[0].innerHTML = streamedRaw[0].innerHTML + content;
 					streamed[0].innerHTML = marked.parse(streamedRaw[0].innerHTML);
