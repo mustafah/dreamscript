@@ -82,6 +82,7 @@ export async function llm(question: string) {
 
 async function ollama(question) {
     try {
+        Globals.llmPanelProvider.postMessage({ command: 'startLLMResponseChunk', data: null });
         const response = await axios.post('http://localhost:11434/api/generate', {
             model: 'llama3.1',
             prompt: question,
@@ -92,17 +93,20 @@ async function ollama(question) {
             },
             responseType: 'stream'
         });
-
         response.data.on('data', (chunk) => {
             const lines = chunk.toString().split('\n').filter(line => line.trim() !== '');
             for (const line of lines) {
                 const parsed = JSON.parse(line);
+                // console.log(parsed);
                 if (parsed.response) {
                     const res = (parsed.response);
                     console.log(res);
-                    Globals.llmPanelProvider.postMessage({ command: 'addLLMResponseChunk', data: res });
+                    Globals.llmPanelProvider.postMessage({ command: 'addLLMResponseChunk', data: {response: res, model: parsed.model }});
                     // document.getElementsByClassName("streamed")[0].textContent += res;
                     // res.write(`data: ${JSON.stringify({ token: parsed.response })}\n\n`);
+                }
+                if (parsed.done) {
+                    Globals.llmPanelProvider.postMessage({ command: 'endLLMResponseChunk', data: null });
                 }
             }
         });

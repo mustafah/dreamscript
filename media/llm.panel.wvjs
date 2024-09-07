@@ -23,8 +23,8 @@
 			return false;
 		}
 	});
-
 	document.addEventListener('DOMContentLoaded', (event) => {
+		const loadingAnimation = document.getElementsByClassName("loadingAnimation");
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
@@ -32,14 +32,31 @@
 					const messages = document.getElementsByClassName("message");
 					messages[messages.length - 1].scrollIntoView();
                     break;
+				////
+				case 'startLLMResponseChunk':
+					loadingAnimation[0].classList.add("in");
+					break;
+				case 'endLLMResponseChunk':
+					loadingAnimation[0].classList.remove("in");
+					break;
                 case 'addLLMResponseChunk':
+					// Optimize selection
+					const streamedRaw = document.getElementsByClassName("streamedRaw");
 					const streamed = document.getElementsByClassName("streamed");
-					// console.log("hello ***");
-					// console.log(streamed);
-					// debugger;
-					console.log(event);
-					const content = event.data.data;
-					streamed[0].innerHTML += content;
+					const streamedRole = document.getElementsByClassName("streamedRole");
+					loadingAnimation[0].classList.add("in");
+					const content = event.data.data.response;
+					const model = event.data.data.model;
+					streamedRole[0].innerHTML = "˜”*°•.˜”*°• " + model + " •°*”˜.•°*”˜";
+					streamedRaw[0].innerHTML = streamedRaw[0].innerHTML + content;
+					streamed[0].innerHTML = marked.parse(streamedRaw[0].innerHTML);
+					// streamed[0].querySelectorAll('*').forEach(element => {
+					// 	element.classList.add('fadeable');
+					// 	setTimeout(() => {
+					// 		element.classList.add('in');
+					// 	}, 100);
+					// });
+					loadingAnimation[0].scrollIntoView();
 					// streamed[0].innerHTML += content;
 					
                     break;

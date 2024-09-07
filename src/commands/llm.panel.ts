@@ -93,6 +93,11 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
         const stylesLLM2Uri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm2.css'));
 
         const contextScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'context.min.js'));
+
+        const eclipseGifUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'eclipse.svg'));
+
+        const markdownScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'markdown.min.js'));
+
         const stylesContextUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'skins', 'hackerman.css'));
 
 
@@ -134,8 +139,11 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                                 <div class="content ${message.role}">${message.content}</div>
                         </div>`;
                     }).join('')}
-
+                    
+                    <div class="streamedRole"></div>
+                    <pre class="streamedRaw message"></pre>
                     <pre class="streamed message"></pre>
+                    <div class="fadeable loadingAnimation" style="opacity: 0"><img src="${eclipseGifUri}" /></div>
                 </div>
 
 
@@ -147,6 +155,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 </div>
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
+                <script src="${markdownScriptUri}"></script>
                 <!---->
                 <script src="${llmPanelScriptUri}"></script>
             </body>
