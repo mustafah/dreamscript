@@ -102,7 +102,7 @@ async function ollama(question) {
   try {
     Globals.llmPanelProvider.postMessage({
       command: "startLLMResponseChunk",
-      data: null,
+      data: {},
     });
 
     Globals.llmConversation.push({

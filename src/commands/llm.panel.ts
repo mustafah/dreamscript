@@ -48,15 +48,15 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
         }
         this._view.webview.onDidReceiveMessage(async (message) => {
             if (message.command === 'storeLLMResponse') {
-                const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
-                Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
-                this.updateWebviewContent(""); // Refresh the webview with the new message
+                // const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
+                // Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
+                // this.updateWebviewContent(""); // Refresh the webview with the new message
             }
             else if (message.command === 'askLLM') {
                 const question = message.message.content;
                 const response = await llm(question);
-                Globals.llmConversation.push({role: 'dreamscript', content: question});
-                this.updateWebviewContent(""); 
+                new QuestionAndAnswer({role: 'dreamscript', content: question}).AddToPanel();
+                // this.updateWebviewContent(""); 
             }
         });
         
@@ -140,12 +140,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 
                 <div class="conversation">
 
-                    ${Globals.llmConversation.map((message) => {
-                        return `<div class="message">
-                                ${message.role.toLocaleLowerCase() === 'dreamscript' ? `<div class="role">${message.role}</div>` : ``}
-                                <div class="content ${message.role}">${message.content}</div>
-                        </div>`;
-                    }).join('')}
+                    ${Globals.llmConversation.map(message => new QuestionAndAnswer(message).RenderHTML()).join('')}
                     
                     <div class="streamedRole"></div>
                     <pre class="streamedRaw message"></pre>
@@ -168,6 +163,41 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             </body>
             </html>
         `;
+    }
+}
+
+class QuestionAndAnswer {
+    constructor(args: {
+        index?: number,
+        role?: string,
+        content?: string
+      }) {
+        this.index = args.index;
+        this.role = args.role;
+        this.content = args.content;
+      }
+
+    public index?: number;
+    public role?: string;
+    public content?: string;
+    public get isDreamscript() {
+        return this.role.toLocaleLowerCase() === 'dreamscript';
+    }
+
+    public RenderHTML(): string {
+        return `<div class="message">
+                            ${this.isDreamscript ? `<div class="role">${this.role}</div>` : ``}
+                            <div class="content ${this.role}">${this.content}</div>
+                    </div>`;
+    }
+
+    public AddToPanel() {
+        Globals.llmPanelProvider.postMessage({
+            command: "addHTML",
+            data: this.RenderHTML(),
+          });
+
+          Globals.llmConversation.push({role: this.role, content: this.content});
     }
 }
 

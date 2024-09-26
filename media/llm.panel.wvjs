@@ -26,6 +26,7 @@
 	document.addEventListener('DOMContentLoaded', (event) => {
 		const loadingAnimation = document.getElementsByClassName("loadingAnimation");
 		const streamedRaw = document.getElementsByClassName("streamedRaw");
+		const conversation = document.getElementsByClassName("conversation")[0];
 		let model = "";
         window.addEventListener('message', event => {
             const message = event.data;
@@ -33,6 +34,11 @@
                 case 'loadMetadata':
 					// const messages = document.getElementsByClassName("message");
 					loadingAnimation[0].scrollIntoView();
+                    break;
+				////
+				case 'addHTML':
+					conversation.innerHTML = conversation.innerHTML + message.data;
+					debugger;
                     break;
 				////
 				case 'startLLMResponseChunk':
