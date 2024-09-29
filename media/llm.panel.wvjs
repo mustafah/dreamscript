@@ -37,8 +37,8 @@
                     break;
 				////
 				case 'addHTML':
-					conversation.innerHTML = conversation.innerHTML + message.data;
-					debugger;
+					const selector = document.querySelector(message.data.selector);
+					selector.innerHTML = selector.innerHTML + message.data.html;
                     break;
 				////
 				case 'startLLMResponseChunk':

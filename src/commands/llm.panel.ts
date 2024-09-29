@@ -142,6 +142,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
                     ${Globals.llmConversation.map(message => new QuestionAndAnswer(message).RenderHTML()).join('')}
                     
+                    <div class="new"></div>
                     <div class="streamedRole"></div>
                     <pre class="streamedRaw message"></pre>
                     <pre class="streamed message"></pre>
@@ -194,7 +195,7 @@ class QuestionAndAnswer {
     public AddToPanel() {
         Globals.llmPanelProvider.postMessage({
             command: "addHTML",
-            data: this.RenderHTML(),
+            data: {html: this.RenderHTML(), selector: ".conversation .new"}, // todo
           });
 
           Globals.llmConversation.push({role: this.role, content: this.content});
