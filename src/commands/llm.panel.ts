@@ -1,130 +1,189 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
-import { IMAGES_REGEX } from './regex';
-import { readMetadata } from './metadata';
-import { promptForMetadata } from './prompt';
-import { deleteImage } from './delete.command';
-import { Globals } from '../globals';
-import { llm } from './llm';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import { IMAGES_REGEX } from "./regex";
+import { readMetadata } from "./metadata";
+import { promptForMetadata } from "./prompt";
+import { deleteImage } from "./delete.command";
+import { Globals } from "../globals";
+import { llm } from "./llm";
 
 export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
-    public static readonly viewType = 'dreamscript.llmView';
-    private _view?: vscode.WebviewView;
+  public static readonly viewType = "dreamscript.llmView";
+  private _view?: vscode.WebviewView;
 
-    constructor(private readonly _extensionUri: vscode.Uri) {
-        // Listen for changes in any text document
-        vscode.workspace.onDidChangeTextDocument(event => {
-            const editor = vscode.window.activeTextEditor;
-            if (editor && editor.document === event.document && event.document.languageId === 'dreamscript') {
-                this.updateWebviewContent(event.document);
-            }
-        });
-        // Listen for active editor changes
-        vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor && editor.document.languageId === 'dreamscript') {
-                this.updateWebviewContent(editor.document.getText());
-            }
-        });
+  constructor(private readonly _extensionUri: vscode.Uri) {
+    // Listen for changes in any text document
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      const editor = vscode.window.activeTextEditor;
+      if (
+        editor &&
+        editor.document === event.document &&
+        event.document.languageId === "dreamscript"
+      ) {
+        this.updateWebviewContent(event.document);
+      }
+    });
+    // Listen for active editor changes
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+      if (editor && editor.document.languageId === "dreamscript") {
+        this.updateWebviewContent(editor.document.getText());
+      }
+    });
+  }
+
+  public postMessage(message: any) {
+    this._view.webview.postMessage(message);
+  }
+
+  public resolveWebviewView(
+    webviewView: vscode.WebviewView,
+    context: vscode.WebviewViewResolveContext,
+    _token: vscode.CancellationToken
+  ) {
+    this._view = webviewView;
+    webviewView.webview.options = {
+      enableScripts: true,
+      localResourceRoots: [
+        this._extensionUri,
+        vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, "images"),
+      ],
+    };
+    // Initialize with current active editor if it is a .dream file
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor && activeEditor.document.languageId === "dreamscript") {
+      this.updateWebviewContent(activeEditor.document);
     }
-    
-    public postMessage(message: any) {
-        this._view.webview.postMessage(message);
+    this._view.webview.onDidReceiveMessage(async (message) => {
+      if (message.command === "storeLLMResponse") {
+        const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
+        Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
+        const x = Globals.llmConversation;
+        console.log(x);
+      } else if (message.command === "askLLM") {
+        const question = message.message.content;
+        Globals.llmConversation.push({role: "dreamscript", content: question});
+        const response = await llm(question);
+        new QuestionAndAnswer({
+          role: "dreamscript",
+          content: question,
+        }).AddToPanel();
+        // this.updateWebviewContent("");
+      }
+    });
+  }
+
+  private addMessage(newMessage: { role: string; content: string }) {}
+
+  public async updateWebviewContent(
+    documentOrString: vscode.TextDocument | string
+  ) {
+    if (this._view) {
+      const documentText =
+        typeof documentOrString === "string"
+          ? documentOrString
+          : documentOrString.getText();
+      const imagePaths = this.extractImagePaths(documentText);
+      this._view.webview.html = this.getHtmlForWebview(
+        this._view.webview,
+        imagePaths
+      ); // Reset to actual
+
+      const metadata = await readMetadata();
+      this._view.webview.postMessage({
+        command: "loadMetadata",
+        data: metadata,
+      });
     }
+  }
 
-    public resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, _token: vscode.CancellationToken) {
-        this._view = webviewView;
-        webviewView.webview.options = {
-            enableScripts: true,
-            localResourceRoots: [
-                this._extensionUri,
-                vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, 'images')
-            ]
-        };
-        // Initialize with current active editor if it is a .dream file
-        const activeEditor = vscode.window.activeTextEditor;
-        if (activeEditor && activeEditor.document.languageId === 'dreamscript') {
-            this.updateWebviewContent(activeEditor.document);
-        }
-        this._view.webview.onDidReceiveMessage(async (message) => {
-            if (message.command === 'storeLLMResponse') {
-                // const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
-                // Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
-                // this.updateWebviewContent(""); // Refresh the webview with the new message
-            }
-            else if (message.command === 'askLLM') {
-                const question = message.message.content;
-                const response = await llm(question);
-                new QuestionAndAnswer({role: 'dreamscript', content: question}).AddToPanel();
-                // this.updateWebviewContent(""); 
-            }
-        });
-        
+  private extractImagePaths(documentText: string): string[] {
+    const imagePaths = [];
+    const match = documentText.match(IMAGES_REGEX);
+    if (match && match[2]) {
+      const paths = match[2].split(",").map((path) => path.trim());
+      const workspaceFolders = vscode.workspace.workspaceFolders;
+      if (workspaceFolders) {
+        const workspaceFolderUri = vscode.workspace.workspaceFolders[0].uri;
+        return paths.map((path) =>
+          vscode.Uri.joinPath(
+            workspaceFolderUri,
+            "images",
+            `${path}.png`
+          ).toString()
+        );
+      }
     }
+    return imagePaths;
+  }
 
-    private addMessage(newMessage: { role: string, content: string }) {
+  private getHtmlForWebview(
+    webview: vscode.Webview,
+    imagePaths: string[]
+  ): string {
+    const llmPanelScriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "llm.panel.wvjs")
+    );
+    const stylesLLMUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "llm.css")
+    );
+    const stylesLLM2Uri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "llm2.css")
+    );
 
-    }
+    const contextScriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "media",
+        "contextjs",
+        "context.min.js"
+      )
+    );
 
-    public async updateWebviewContent(documentOrString: vscode.TextDocument | string) {
-        if (this._view) {
-            const documentText = typeof documentOrString === 'string' 
-            ? documentOrString 
-            : documentOrString.getText();
-            const imagePaths = this.extractImagePaths(documentText);
-            this._view.webview.html = this.getHtmlForWebview(this._view.webview, imagePaths); // Reset to actual 
+    const eclipseGifUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "eclipse.svg")
+    );
 
-            const metadata = await readMetadata();
-            this._view.webview.postMessage({ command: 'loadMetadata', data: metadata });
-        }
-    }
+    const markdownScriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "markdown.min.js")
+    );
 
-	private extractImagePaths(documentText: string): string[] {
-        const imagePaths = [];
-        const match = documentText.match(IMAGES_REGEX);
-        if (match && match[2]) {
-            const paths = match[2].split(',').map(path => path.trim());
-            const workspaceFolders = vscode.workspace.workspaceFolders;
-            if (workspaceFolders) {
-                const workspaceFolderUri = vscode.workspace.workspaceFolders[0].uri;
-                return paths.map(path => vscode.Uri.joinPath(workspaceFolderUri, 'images', `${path}.png`).toString());
-            }
-        }
-        return imagePaths;
-    }
+    const stylesContextUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this._extensionUri,
+        "media",
+        "contextjs",
+        "skins",
+        "hackerman.css"
+      )
+    );
 
-    private getHtmlForWebview(webview: vscode.Webview, imagePaths: string[]): string {
+    const uniqueString = new Date().getTime();
+    // Append unique string to each image path
+    const imageTags = imagePaths
+      .map((path) => {
+        const imagePathWithQuery = new URL(path);
+        imagePathWithQuery.searchParams.set("v", uniqueString.toString());
+        // return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
 
-        const llmPanelScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm.panel.wvjs'));
-        const stylesLLMUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm.css'));
-        const stylesLLM2Uri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'llm2.css'));
+        const fileNameWithoutExtension = path
+          .split("/")
+          .pop()
+          .split(".")
+          .slice(0, -1)
+          .join(".");
 
-        const contextScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'context.min.js'));
-
-        const eclipseGifUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'eclipse.svg'));
-
-        const markdownScriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'markdown.min.js'));
-
-        const stylesContextUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'contextjs', 'skins', 'hackerman.css'));
-
-
-        const uniqueString = new Date().getTime();
-        // Append unique string to each image path
-        const imageTags = imagePaths.map(path => {
-            const imagePathWithQuery = new URL(path);
-            imagePathWithQuery.searchParams.set('v', uniqueString.toString());
-            // return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
-
-            const fileNameWithoutExtension = path.split('/').pop().split('.').slice(0, -1).join('.');
-
-            return `<div class="grid-item">
-            <img class="dream-image" src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" data-path="${fileNameWithoutExtension}" />
+        return `<div class="grid-item">
+            <img class="dream-image" src="${webview.asWebviewUri(
+              vscode.Uri.parse(imagePathWithQuery.href)
+            )}" data-path="${fileNameWithoutExtension}" />
                 <button class="favorite-btn" data-path="${fileNameWithoutExtension}">❤️</button>
                 <button class="meta-btn" data-path="${fileNameWithoutExtension}">📝</button>
             </div>`;
-        }).join('');
+      })
+      .join("");
 
-        return `
+    return `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -140,12 +199,14 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 
                 <div class="conversation">
 
-                    ${Globals.llmConversation.map(message => new QuestionAndAnswer(message).RenderHTML()).join('')}
+                    ${Globals.llmConversation
+                      .map((message) =>
+                        new QuestionAndAnswer(message).RenderHTML()
+                      )
+                      .join("")}
                     
                     <div class="new"></div>
-                    <div class="streamedRole"></div>
-                    <pre class="streamedRaw message"></pre>
-                    <pre class="streamed message"></pre>
+                    
                     <div class="fadeable loadingAnimation" style="opacity: 0"><img src="${eclipseGifUri}" /></div>
                 </div>
 
@@ -164,48 +225,51 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
             </body>
             </html>
         `;
-    }
+  }
 }
 
 class QuestionAndAnswer {
-    constructor(args: {
-        index?: number,
-        role?: string,
-        content?: string
-      }) {
-        this.index = args.index;
-        this.role = args.role;
-        this.content = args.content;
-      }
+  constructor(args: { index?: number; role?: string; content?: string }) {
+    this.index = args.index;
+    this.role = args.role;
+    this.content = args.content;
+  }
 
-    public index?: number;
-    public role?: string;
-    public content?: string;
-    public get isDreamscript() {
-        return this.role.toLocaleLowerCase() === 'dreamscript';
-    }
+  public index?: number;
+  public role?: string;
+  public content?: string;
+  public get isDreamscript() {
+    return this.role.toLocaleLowerCase() === "dreamscript";
+  }
 
-    public RenderHTML(): string {
-        return `<div class="message">
-                            ${this.isDreamscript ? `<div class="role">${this.role}</div>` : ``}
-                            <div class="content ${this.role}">${this.content}</div>
-                    </div>`;
-    }
+  public RenderHTML(): string {
+    return `<div class="message">
+                ${
+                    this.isDreamscript ? `<div class="role">${this.role}</div>` : ``
+                }
+                <div class="content ${this.role}">${this.content}</div>
+                
+                <div class="answer">
+                <div class="streamedRole"></div>
+                <pre class="streamedRaw message"></pre>
+                <pre class="streamed message"></pre>
+                </div>
+            </div>`;
+  }
 
-    public AddToPanel() {
-        Globals.llmPanelProvider.postMessage({
-            command: "addHTML",
-            data: {html: this.RenderHTML(), selector: ".conversation .new"}, // todo
-          });
+  public AddToPanel() {
+    Globals.postWebViewMessage('addHTML', { html: this.RenderHTML(), selector: ".conversation .new" });
+    
+    Globals.postWebViewMessage('scrollToBottom');
 
-          Globals.llmConversation.push({role: this.role, content: this.content});
-    }
+    Globals.llmConversation.push({ role: this.role, content: this.content });
+  }
 }
 
 function forceReflowWebview(webviewPanel) {
-    const originalContent = webviewPanel.webview.html;
-    webviewPanel.webview.html = '<html><body>Reloading...</body></html>';
-    setTimeout(() => {
-        webviewPanel.webview.html = originalContent;
-    }, 100); // Delay can be adjusted
+  const originalContent = webviewPanel.webview.html;
+  webviewPanel.webview.html = "<html><body>Reloading...</body></html>";
+  setTimeout(() => {
+    webviewPanel.webview.html = originalContent;
+  }, 100); // Delay can be adjusted
 }

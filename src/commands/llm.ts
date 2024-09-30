@@ -130,10 +130,8 @@ async function ollama(question) {
         .filter((line) => line.trim() !== "");
       for (const line of lines) {
         const parsed = JSON.parse(line);
-        // console.log(parsed);
         if (parsed.response) {
           const res = parsed.response;
-          console.log(res);
           Globals.llmPanelProvider.postMessage({
             command: "addLLMResponseChunk",
             data: { response: res, model: parsed.model },

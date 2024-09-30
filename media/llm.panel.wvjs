@@ -25,14 +25,12 @@
 	});
 	document.addEventListener('DOMContentLoaded', (event) => {
 		const loadingAnimation = document.getElementsByClassName("loadingAnimation");
-		const streamedRaw = document.getElementsByClassName("streamedRaw");
 		const conversation = document.getElementsByClassName("conversation")[0];
 		let model = "";
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
                 case 'loadMetadata':
-					// const messages = document.getElementsByClassName("message");
 					loadingAnimation[0].scrollIntoView();
                     break;
 				////
@@ -41,32 +39,44 @@
 					selector.innerHTML = selector.innerHTML + message.data.html;
                     break;
 				////
+				case 'scrollToBottom':
+					loadingAnimation[0].scrollIntoView();
+					break;
 				case 'startLLMResponseChunk':
 					loadingAnimation[0].classList.add("in");
 					break;
 				case 'endLLMResponseChunk':
 					loadingAnimation[0].classList.remove("in");
 					
+					var streamedRaws = document.querySelectorAll(".streamedRaw");
+					var streamedRaw = streamedRaws[streamedRaws.length - 1];
+
 					vscode.postMessage({
 						command: 'storeLLMResponse',
 						message: {
 							role: 'dreamscript',
 							question: question,
 							model: model,
-							response: streamedRaw[0].innerHTML
+							response: streamedRaw.innerHTML
 						}
 					});
 					break;
                 case 'addLLMResponseChunk':
-					// Optimize selection
-					const streamed = document.getElementsByClassName("streamed");
-					const streamedRole = document.getElementsByClassName("streamedRole");
+					const streameds = document.querySelectorAll(".streamed");
+					const streamed = streameds[streameds.length - 1];
+
+					const streamedRoles = document.querySelectorAll(".streamedRole");
+					const streamedRole = streamedRoles[streamedRoles.length - 1];
+
+					streamedRaws = document.querySelectorAll(".streamedRaw");
+					streamedRaw = streamedRaws[streamedRaws.length - 1];
+
 					loadingAnimation[0].classList.add("in");
-					const content = event.data.data.response;
-					model = event.data.data.model;
-					streamedRole[0].innerHTML = "˜”*°•.˜”*°• " + model + " •°*”˜.•°*”˜";
-					streamedRaw[0].innerHTML = streamedRaw[0].innerHTML + content;
-					streamed[0].innerHTML = marked.parse(streamedRaw[0].innerHTML);
+					const content = message.data.response;
+					model = message.data.model;
+					streamedRole.innerHTML = "˜”*°•.˜”*°• " + model + " •°*”˜.•°*”˜";
+					streamedRaw.innerHTML = streamedRaw.innerHTML + content;
+					streamed.innerHTML = marked.parse(streamedRaw.innerHTML);
 					// streamed[0].querySelectorAll('*').forEach(element => {
 					// 	element.classList.add('fadeable');
 					// 	setTimeout(() => {

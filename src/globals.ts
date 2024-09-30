@@ -7,6 +7,10 @@ export class Globals {
   public static llmPanelProvider: LLMPanelViewProvider | null = null;
   public static extensionContext: vscode.ExtensionContext | null = null;
 
+  public static postWebViewMessage(command, args = {}) {
+    Globals.llmPanelProvider.postMessage({command: command, data: args});
+  }
+
   public static currentStreamReply = "";
   public static llmConversation = [
     {
