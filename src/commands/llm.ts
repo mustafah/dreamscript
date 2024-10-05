@@ -105,10 +105,10 @@ async function ollama(question) {
       data: {},
     });
 
-    Globals.llmConversation.push({
-      role: "dreamscript",
-      content: question,
-    });
+    // Globals.llmConversation.push({
+    //   role: "dreamscript",
+    //   content: question,
+    // });
     const response = await axios.post(
       "http://localhost:11434/api/generate",
       {
@@ -134,7 +134,7 @@ async function ollama(question) {
           const res = parsed.response;
           Globals.llmPanelProvider.postMessage({
             command: "addLLMResponseChunk",
-            data: { response: res, model: parsed.model },
+            data: { content: res, model: parsed.model },
           });
           // document.getElementsByClassName("streamed")[0].textContent += res;
           // res.write(`data: ${JSON.stringify({ token: parsed.response })}\n\n`);

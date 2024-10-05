@@ -12,62 +12,20 @@ export class Globals {
   }
 
   public static currentStreamReply = "";
+
+  public static SampleQuestions = [
+    `Let's spark your imagination together! 🧠✨💡 How can I fuel your creative fire with some inspiring prompts?`,
+    `Ready to dive into a world of creativity? 🌎🎨💭 Ask away! How can I help you brainstorm your next big idea?`,
+    `Need a creative nudge?  nudge nudge wink 😉 Let's collaborate on some prompts that will ignite your inspiration!`
+  ];
+
   public static llmConversation = [
     {
-      role: "dreamscript",
-      content: "Can you give me more variations on this ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 2 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 3 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 4 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 4 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 4 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
-    },
-    {
-      role: "dreamscript",
-      content: "Can you give me more variations on this 4 ?",
-    },
-    {
-      role: "llm",
-      content: "Here is 1, 2 and three ..",
+      question: this.SampleQuestions[Math.floor(Math.random() * this.SampleQuestions.length)],
+      // answer: {
+      //   model: "llama",
+      //   content: "No, I can't help yourself ...",
+      // }
     }
   ];
 

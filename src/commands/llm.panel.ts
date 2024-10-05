@@ -7,28 +7,16 @@ import { promptForMetadata } from "./prompt";
 import { deleteImage } from "./delete.command";
 import { Globals } from "../globals";
 import { llm } from "./llm";
+import { marked } from "marked";
 
 export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "dreamscript.llmView";
   private _view?: vscode.WebviewView;
 
   constructor(private readonly _extensionUri: vscode.Uri) {
-    // Listen for changes in any text document
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      const editor = vscode.window.activeTextEditor;
-      if (
-        editor &&
-        editor.document === event.document &&
-        event.document.languageId === "dreamscript"
-      ) {
-        this.updateWebviewContent(event.document);
-      }
-    });
-    // Listen for active editor changes
-    vscode.window.onDidChangeActiveTextEditor((editor) => {
-      if (editor && editor.document.languageId === "dreamscript") {
-        this.updateWebviewContent(editor.document.getText());
-      }
+    this.loadConversationFromFile().then((data) => {
+      if (data) Globals.llmConversation = data;
+      this.updateWebviewContent();
     });
   }
 
@@ -52,42 +40,74 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     // Initialize with current active editor if it is a .dream file
     const activeEditor = vscode.window.activeTextEditor;
     if (activeEditor && activeEditor.document.languageId === "dreamscript") {
-      this.updateWebviewContent(activeEditor.document);
+      this.updateWebviewContent();
     }
     this._view.webview.onDidReceiveMessage(async (message) => {
       if (message.command === "storeLLMResponse") {
-        const llmResponse: { model: string, question: string, response: string, role: string } = message.message;
-        Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
-        const x = Globals.llmConversation;
-        console.log(x);
+        const llmResponse: { question: string, model: string, response: string } = message.message;
+        new QuestionAndAnswer({question: llmResponse.question, answer: {model: llmResponse.model, content: llmResponse.response}});
+        // Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
+        await this.saveConversationToFile(Globals.llmConversation);
+        console.log(Globals.llmConversation);
       } else if (message.command === "askLLM") {
         const question = message.message.content;
-        Globals.llmConversation.push({role: "dreamscript", content: question});
+        // Globals.llmConversation.push({role: "dreamscript", content: question});
         const response = await llm(question);
         new QuestionAndAnswer({
-          role: "dreamscript",
-          content: question,
+          question: question
         }).AddToPanel();
         // this.updateWebviewContent("");
       }
     });
   }
 
+  private async saveConversationToFile(conversation) {
+    try {
+      const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, "dreamproj", "llm");
+      const directoryPath = path.dirname(filePath.fsPath);
+      if (!fs.existsSync(directoryPath)) {
+        await fs.promises.mkdir(directoryPath, { recursive: true });
+      }
+      const fileContent = JSON.stringify(conversation, null, 2);  // Stringify with indentation
+      await fs.promises.writeFile(filePath.fsPath, fileContent);
+      console.log("LLM conversation saved successfully!");
+    } catch (error) {
+      console.error("Error saving LLM conversation:", error);
+      // Handle errors appropriately, e.g., display a user notification
+    }
+  }
+
+  private async loadConversationFromFile() {
+    try {
+      const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, "dreamproj", "llm");
+      if (!fs.existsSync(filePath.fsPath)) {
+        console.warn("LLM conversation file not found.");
+        return null;
+      }
+  
+      const fileContent = await fs.promises.readFile(filePath.fsPath, 'utf8');
+      const loadedConversation = JSON.parse(fileContent);
+  
+      // Ensure the loaded conversation is an array
+      if (!Array.isArray(loadedConversation)) {
+        console.error("Invalid LLM conversation data.");
+        return null;
+      }
+  
+      return loadedConversation;
+    } catch (error) {
+      console.error("Error loading LLM conversation:", error);
+      return null;
+    }
+  }
+
   private addMessage(newMessage: { role: string; content: string }) {}
 
-  public async updateWebviewContent(
-    documentOrString: vscode.TextDocument | string
-  ) {
+  public async updateWebviewContent() {
     if (this._view) {
-      const documentText =
-        typeof documentOrString === "string"
-          ? documentOrString
-          : documentOrString.getText();
-      const imagePaths = this.extractImagePaths(documentText);
       this._view.webview.html = this.getHtmlForWebview(
-        this._view.webview,
-        imagePaths
-      ); // Reset to actual
+        this._view.webview
+      );
 
       const metadata = await readMetadata();
       this._view.webview.postMessage({
@@ -118,8 +138,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
   }
 
   private getHtmlForWebview(
-    webview: vscode.Webview,
-    imagePaths: string[]
+    webview: vscode.Webview
   ): string {
     const llmPanelScriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "llm.panel.wvjs")
@@ -160,28 +179,6 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
     const uniqueString = new Date().getTime();
     // Append unique string to each image path
-    const imageTags = imagePaths
-      .map((path) => {
-        const imagePathWithQuery = new URL(path);
-        imagePathWithQuery.searchParams.set("v", uniqueString.toString());
-        // return `<div class="grid-item"><img src="${webview.asWebviewUri(vscode.Uri.parse(imagePathWithQuery.href))}" /></div>`;
-
-        const fileNameWithoutExtension = path
-          .split("/")
-          .pop()
-          .split(".")
-          .slice(0, -1)
-          .join(".");
-
-        return `<div class="grid-item">
-            <img class="dream-image" src="${webview.asWebviewUri(
-              vscode.Uri.parse(imagePathWithQuery.href)
-            )}" data-path="${fileNameWithoutExtension}" />
-                <button class="favorite-btn" data-path="${fileNameWithoutExtension}">❤️</button>
-                <button class="meta-btn" data-path="${fileNameWithoutExtension}">📝</button>
-            </div>`;
-      })
-      .join("");
 
     return `
             <!DOCTYPE html>
@@ -203,7 +200,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                       .map((message) =>
                         new QuestionAndAnswer(message).RenderHTML()
                       )
-                      .join("")}
+                      .join("hello")}
                     
                     <div class="new"></div>
                     
@@ -229,32 +226,37 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 }
 
 class QuestionAndAnswer {
-  constructor(args: { index?: number; role?: string; content?: string }) {
-    this.index = args.index;
-    this.role = args.role;
-    this.content = args.content;
+  constructor(args: {
+    question: string;
+    answer?: {
+        model?: string;
+        content?: string;
+    }}) {
+    // this.index = args.index;
+    this.question = args.question;
+    this.answer = args.answer;
   }
 
   public index?: number;
-  public role?: string;
-  public content?: string;
-  public get isDreamscript() {
-    return this.role.toLocaleLowerCase() === "dreamscript";
-  }
+  public question?: string;
+  public answer?: {
+    model?: string;
+    content?: string;
+  };
 
   public RenderHTML(): string {
-    return `<div class="message">
-                ${
-                    this.isDreamscript ? `<div class="role">${this.role}</div>` : ``
-                }
-                <div class="content ${this.role}">${this.content}</div>
-                
-                <div class="answer">
-                <div class="streamedRole"></div>
-                <pre class="streamedRaw message"></pre>
-                <pre class="streamed message"></pre>
-                </div>
-            </div>`;
+    return `<div class="questionAndAnswer">
+                <div class="question">${this.question}</div>
+                    <div class="answer">
+                      <div class="model">
+                        ${this.answer?.model ? `˜”*°•.˜”*°• <span class="model-name">${this.answer.model}</span> •°*”˜.•°*”˜`:``}
+                      </div>
+                      <pre class="raw"></pre>
+                      <div class="marked">
+                        ${this.answer?.content ? marked.parse(this.answer.content) : ``}
+                      </div>
+                    </div>
+                </div>`;
   }
 
   public AddToPanel() {
@@ -262,7 +264,7 @@ class QuestionAndAnswer {
     
     Globals.postWebViewMessage('scrollToBottom');
 
-    Globals.llmConversation.push({ role: this.role, content: this.content });
+    // Globals.llmConversation.push({ role: this.model, content: this.answer });
   }
 }
 

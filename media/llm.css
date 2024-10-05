@@ -1,7 +1,8 @@
 body {
     padding: 0 8px;
 }
-.content {
+
+.question {
     background: rgb(255 255 255 / 10%);
     padding: 8px;
     border-radius: 8px;
@@ -9,9 +10,7 @@ body {
     font-family: monospace;
     text-align: justify;
 }
-.content.llm {
-    background: transparent;
-}
+
 
 .role {
     text-transform: uppercase;
@@ -84,7 +83,7 @@ textarea {
     width: calc(100% - 24px);
 }
 
-.streamed {
+.answer {
     width: calc(100% - 16px* 2);
     text-wrap: wrap;
     padding: 0 16px;
@@ -92,15 +91,15 @@ textarea {
     margin: 0;
 }
 
-.streamed p, .streamed ul, .streamed ol {
+.answer p, .answer ul, .answer ol {
     margin: 0;
 }
 
-.streamedRaw {
+.answer .raw {
     display: none;
 }
 
-.streamedRole {
+.answer .model {
     text-transform: uppercase;
     font-size: 50%;
     text-align: center;

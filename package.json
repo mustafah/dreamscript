@@ -247,7 +247,7 @@
 	"dependencies": {
 		"@azure/storage-blob": "^12.17.0",
 		"@google/generative-ai": "^0.5.0",
-		"@kreisler/js-google-translate-free": "^4.0.2",
+		"@kreisler/js-google-translate-free": "^2.0.2",
 		"archiver": "^6.0.1",
 		"archiver-zip-encrypted": "^2.0.0",
 		"aws-sdk": "^2.717.0",
@@ -257,6 +257,7 @@
 		"form-data": "^4.0.0",
 		"handlebars": "^4.7.8",
 		"langchain": "^0.1.9",
+		"marked": "^14.1.2",
 		"nanoid": "^3.3.7",
 		"save-clipboard-image": "^1.0.0",
 		"sharp": "^0.33.3",

@@ -4,21 +4,12 @@ chunk="None"
 
 question="
 
-   We want a add a watch mode to the controller so when new points added to the Controller and watch mode is Watching it should call CallEngine method
+   We want << SAVE Globals.llmConversation >> inside a file called llm.txt
 
 "
 
 file_list="
 
-    C:\Users\mohamus03\Projects\FEGeosteeringUI\Playground\Controller.cs
-    
-    # C:\Users\mohamus03\Projects\FEGeosteeringUI\Addin_Gridding\Sources\Gridding.Application.Logic\Postlanding\Postlanding_FeatureController.cs
-    # C:\Users\mohamus03\Projects\FEGeosteeringUI\Playground\Stream.cs
-    # C:\Users\mohamus03\Projects\FEGeosteeringUI\Addin_Gridding\Sources\Gridding.Application.Logic\Utils\Stream.cs
-    # 
-
-    # /Users/mustafah/Projects/dreamscript/src/commands/llm.ts
-    # /Users/mustafah/Desktop/FastDtw.CSharp/Playground/SensorySeries.cs
-    #
+    /Users/mustafah/Projects/dreamscript/src/commands/llm.panel.ts
 
 "
