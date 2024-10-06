@@ -12,6 +12,7 @@ export class Globals {
   }
 
   public static currentStreamReply = "";
+  public static currentStreamContext = null;
 
   public static SampleQuestions = [
     `Let's spark your imagination together! 🧠✨💡 How can I fuel your creative fire with some inspiring prompts?`,

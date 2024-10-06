@@ -15,7 +15,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionUri: vscode.Uri) {
     this.loadConversationFromFile().then((data) => {
-      if (data) Globals.llmConversation = data;
+      if (data?.length) Globals.llmConversation = data;
       this.updateWebviewContent();
     });
   }
@@ -45,6 +45,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     this._view.webview.onDidReceiveMessage(async (message) => {
       if (message.command === "storeLLMResponse") {
         const llmResponse: { question: string, answer: {model: string, content: string}, context: any } = message.message;
+        Globals.currentStreamContext = llmResponse.context;
         Globals.llmConversation.push(new QuestionAndAnswer(llmResponse));
         await this.saveConversationToFile(Globals.llmConversation);
         console.log(Globals.llmConversation);
