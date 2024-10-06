@@ -125,3 +125,14 @@ textarea {
 .questionAndAnswer {
     margin-top: 32px;
 }
+
+
+.answer li {
+    transition: background-color 0.25s ease-in-out;
+    padding: 4px 4px;
+}
+.answer li:hover {
+    background: #ffffff24;
+    border-radius: 4px;
+    cursor: pointer;
+}

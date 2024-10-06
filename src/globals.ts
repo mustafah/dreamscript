@@ -20,7 +20,7 @@ export class Globals {
     `Need a creative nudge?  nudge nudge wink 😉 Let's collaborate on some prompts that will ignite your inspiration!`
   ];
 
-  public static llmConversation = [
+  public static currentConversation = [
     new QuestionAndAnswer({
       question: this.SampleQuestions[Math.floor(Math.random() * this.SampleQuestions.length)],
       answer: {

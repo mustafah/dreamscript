@@ -28,11 +28,15 @@
 		const conversation = document.getElementsByClassName("conversation")[0];
 		let model = "";
 		var $raw;
+		var $marked;
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
                 case 'loadMetadata':
 					loadingAnimation[0].scrollIntoView();
+					setTimeout(() => {
+						$(".answer .marked li").click(() => {console.log("clicked");});
+					}, 5000);
                     break;
 				////
 				case 'addHTML':
@@ -49,10 +53,8 @@
 				case 'endLLMResponseChunk':
 					loadingAnimation[0].classList.remove("in");
 					
-					var streamedRaws = document.querySelectorAll(".streamedRaw");
-					var streamedRaw = streamedRaws[streamedRaws.length - 1];
 					$raw = queryLatest(".raw");
-					debugger;
+
 					vscode.postMessage({
 						command: 'storeLLMResponse',
 						message: {
@@ -68,7 +70,7 @@
                 case 'addLLMResponseChunk':
 					$raw = queryLatest(".raw");
 					$raw.innerHTML = $raw.innerHTML + message.data.content;
-					const $marked = queryLatest(".marked");
+					$marked = queryLatest(".marked");
 					$marked.innerHTML = marked.parse($raw.innerHTML);
 					const $model = queryLatest(".model-name");
 					$model.innerHTML = model = message.data.model;

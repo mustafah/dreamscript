@@ -15,7 +15,6 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
   constructor(private readonly _extensionUri: vscode.Uri) {
     this.loadConversationFromFile().then((data) => {
-      if (data?.length) Globals.llmConversation = data;
       this.updateWebviewContent();
     });
   }
@@ -46,9 +45,9 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
       if (message.command === "storeLLMResponse") {
         const llmResponse: { question: string, answer: {model: string, content: string}, context: any } = message.message;
         Globals.currentStreamContext = llmResponse.context;
-        Globals.llmConversation.push(new QuestionAndAnswer(llmResponse));
-        await this.saveConversationToFile(Globals.llmConversation);
-        console.log(Globals.llmConversation);
+        Globals.currentConversation.push(new QuestionAndAnswer(llmResponse));
+        await this.saveConversationToFile();
+        console.log(Globals.currentConversation);
       } else if (message.command === "askLLM") {
         const question = message.message.content;
         // Globals.llmConversation.push({role: "dreamscript", content: question});
@@ -61,14 +60,23 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  private async saveConversationToFile(conversations: QuestionAndAnswer[]) {
+  private async saveConversationToFile() {
     try {
+      const conversation = Globals.currentConversation;
+      const context = Globals.currentStreamContext;
+
       const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, "dreamproj", "llm");
       const directoryPath = path.dirname(filePath.fsPath);
       if (!fs.existsSync(directoryPath)) {
         await fs.promises.mkdir(directoryPath, { recursive: true });
       }
-      const fileContent = JSON.stringify(conversations, null, 2);  // Stringify with indentation
+      const llmContent = {
+        conversation,
+        meta: {
+          context
+        }
+      };
+      const fileContent = JSON.stringify(llmContent, null, 2);  // Stringify with indentation
       await fs.promises.writeFile(filePath.fsPath, fileContent);
       console.log("LLM conversation saved successfully!");
     } catch (error) {
@@ -86,14 +94,16 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
       }
   
       const fileContent = await fs.promises.readFile(filePath.fsPath, 'utf8');
-      const loadedConversation = JSON.parse(fileContent);
-  
+      const loadedLLM = JSON.parse(fileContent);
+      Globals.currentStreamContext = loadedLLM.meta?.context;
+      if (loadedLLM.conversation?.length)
+        Globals.currentConversation = loadedLLM.conversation.map((conv) => new QuestionAndAnswer(conv));
       // Ensure the loaded conversation is an array
-      if (!Array.isArray(loadedConversation)) {
+      if (!Array.isArray(Globals.currentConversation)) {
         console.error("Invalid LLM conversation data.");
         return null;
       }
-      return loadedConversation.map((conv) => new QuestionAndAnswer(conv));
+      return Globals.currentConversation;
     } catch (error) {
       console.error("Error loading LLM conversation:", error);
       return null;
@@ -166,6 +176,10 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, "media", "markdown.min.js")
     );
 
+    const jqueryScriptUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "media", "jquery-3.7.1.min.js")
+    );
+
     const stylesContextUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this._extensionUri,
@@ -195,7 +209,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 
                 <div class="conversation">
 
-                    ${Globals.llmConversation
+                    ${Globals.currentConversation
                       .map((message) => message.RenderHTML()
                       )
                       .join("")}
@@ -215,6 +229,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 <link href="${stylesContextUri}" rel="stylesheet">
                 <script src="${contextScriptUri}"></script>
                 <script src="${markdownScriptUri}"></script>
+                <script src="${jqueryScriptUri}"></script>
                 <!---->
                 <script src="${llmPanelScriptUri}"></script>
             </body>
@@ -234,7 +249,6 @@ export class QuestionAndAnswer {
     // this.index = args.index;
     this.question = args.question;
     this.answer = args.answer;
-    this.context = args.context;
   }
 
   public index?: number;
@@ -243,7 +257,6 @@ export class QuestionAndAnswer {
     model?: string;
     content?: string;
   };
-  public context?: any;
 
   public RenderHTML(): string {
     return `<div class="questionAndAnswer">
