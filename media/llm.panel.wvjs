@@ -51,17 +51,17 @@
 					
 					var streamedRaws = document.querySelectorAll(".streamedRaw");
 					var streamedRaw = streamedRaws[streamedRaws.length - 1];
-
 					$raw = queryLatest(".raw");
-					debugger
+					debugger;
 					vscode.postMessage({
 						command: 'storeLLMResponse',
 						message: {
 							question: question,
 							answer: {
 								model: model,
-								answer: $raw.innerHTML
-							}
+								content: $raw.innerHTML
+							},
+							context: message.context
 						}
 					});
 					break;

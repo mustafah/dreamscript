@@ -44,9 +44,8 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     }
     this._view.webview.onDidReceiveMessage(async (message) => {
       if (message.command === "storeLLMResponse") {
-        const llmResponse: { question: string, model: string, response: string } = message.message;
-        new QuestionAndAnswer({question: llmResponse.question, answer: {model: llmResponse.model, content: llmResponse.response}});
-        // Globals.llmConversation.push({role: llmResponse.model, content: llmResponse.response});
+        const llmResponse: { question: string, answer: {model: string, content: string}, context: any } = message.message;
+        Globals.llmConversation.push(new QuestionAndAnswer(llmResponse));
         await this.saveConversationToFile(Globals.llmConversation);
         console.log(Globals.llmConversation);
       } else if (message.command === "askLLM") {
@@ -61,14 +60,14 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
     });
   }
 
-  private async saveConversationToFile(conversation) {
+  private async saveConversationToFile(conversations: QuestionAndAnswer[]) {
     try {
       const filePath = vscode.Uri.joinPath(vscode.workspace.workspaceFolders[0].uri, "dreamproj", "llm");
       const directoryPath = path.dirname(filePath.fsPath);
       if (!fs.existsSync(directoryPath)) {
         await fs.promises.mkdir(directoryPath, { recursive: true });
       }
-      const fileContent = JSON.stringify(conversation, null, 2);  // Stringify with indentation
+      const fileContent = JSON.stringify(conversations, null, 2);  // Stringify with indentation
       await fs.promises.writeFile(filePath.fsPath, fileContent);
       console.log("LLM conversation saved successfully!");
     } catch (error) {
@@ -93,8 +92,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
         console.error("Invalid LLM conversation data.");
         return null;
       }
-  
-      return loadedConversation;
+      return loadedConversation.map((conv) => new QuestionAndAnswer(conv));
     } catch (error) {
       console.error("Error loading LLM conversation:", error);
       return null;
@@ -197,10 +195,9 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                 <div class="conversation">
 
                     ${Globals.llmConversation
-                      .map((message) =>
-                        new QuestionAndAnswer(message).RenderHTML()
+                      .map((message) => message.RenderHTML()
                       )
-                      .join("hello")}
+                      .join("")}
                     
                     <div class="new"></div>
                     
@@ -225,16 +222,18 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
   }
 }
 
-class QuestionAndAnswer {
+export class QuestionAndAnswer {
   constructor(args: {
     question: string;
     answer?: {
         model?: string;
         content?: string;
-    }}) {
+    },
+    context?: any}) {
     // this.index = args.index;
     this.question = args.question;
     this.answer = args.answer;
+    this.context = args.context;
   }
 
   public index?: number;
@@ -243,13 +242,14 @@ class QuestionAndAnswer {
     model?: string;
     content?: string;
   };
+  public context?: any;
 
   public RenderHTML(): string {
     return `<div class="questionAndAnswer">
                 <div class="question">${this.question}</div>
                     <div class="answer">
                       <div class="model">
-                        ${this.answer?.model ? `˜”*°•.˜”*°• <span class="model-name">${this.answer.model}</span> •°*”˜.•°*”˜`:``}
+                        ˜”*°•.˜”*°• <span class="model-name">${this.answer?.model || ""}</span> •°*”˜.•°*”˜
                       </div>
                       <pre class="raw"></pre>
                       <div class="marked">

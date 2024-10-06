@@ -121,3 +121,7 @@ textarea {
 .fadeable.in {
     opacity: 1!important;
 }
+
+.questionAndAnswer {
+    margin-top: 32px;
+}

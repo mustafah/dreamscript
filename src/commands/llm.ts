@@ -142,7 +142,7 @@ async function ollama(question) {
         if (parsed.done) {
           Globals.llmPanelProvider.postMessage({
             command: "endLLMResponseChunk",
-            data: null,
+            context: parsed.context
           });
         }
       }

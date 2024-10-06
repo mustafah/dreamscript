@@ -1,6 +1,6 @@
 import { ImagesPanelViewProvider } from "./commands/images.panel";
 import * as vscode from "vscode";
-import { LLMPanelViewProvider } from "./commands/llm.panel";
+import { LLMPanelViewProvider, QuestionAndAnswer } from "./commands/llm.panel";
 
 export class Globals {
   public static imagesPanelProvider: ImagesPanelViewProvider | null = null;
@@ -20,13 +20,13 @@ export class Globals {
   ];
 
   public static llmConversation = [
-    {
+    new QuestionAndAnswer({
       question: this.SampleQuestions[Math.floor(Math.random() * this.SampleQuestions.length)],
-      // answer: {
-      //   model: "llama",
-      //   content: "No, I can't help yourself ...",
-      // }
-    }
+      answer: {
+        model: null,
+        content: null
+      }
+    })
   ];
 
   public static llmConversationAttachments = [
