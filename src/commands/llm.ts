@@ -100,6 +100,18 @@ export async function llm(question: string) {
 
 async function ollama(question) {
   try {
+    // https://www.postman.com/postman-student-programs/ollama-api/request/bnijodf/list-local-models
+
+    const response2 = await axios.get(
+      "http://localhost:11434/api/tags",
+      {
+      }
+    );
+
+    const models2 = response2.data.models;
+    console.log("models2");
+    // // //
+
     Globals.llmPanelProvider.postMessage({
       command: "startLLMResponseChunk",
       data: {},
