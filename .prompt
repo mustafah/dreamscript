@@ -4,7 +4,8 @@ chunk="None"
 
 question="
 
-   We want << SAVE Globals.llmConversation >> inside a file called llm.txt
+   inside [if (message.command === "insertText")]
+   we want insert the text at the opened document at the cursor there
 
 "
 

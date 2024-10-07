@@ -56,7 +56,34 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
           question: question
         }).AddToPanel();
         // this.updateWebviewContent("");
+      } else if (message.command === "insertText") {
+        const text = message.message.content;
+        this.insertTextAtCursor(text);
       }
+    });
+  }
+
+  private insertTextAtCursor(text: string) {
+    text = "\n" + text + "\n";
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+      console.error("Active editor not found.");
+      return;
+    }
+  
+    const edit = activeEditor.edit(builder => {
+      // Get the current cursor position
+      const selection = activeEditor.selection;
+      const position = selection.active;
+  
+      // Insert the text at the cursor position
+      builder.insert(position, text);
+    });
+    edit.then(() => {
+      vscode.commands.executeCommand("workbench.action.focusActiveEditorGroup");
+      console.log("Text inserted successfully!");
+    }, (error) => {
+      console.error("Error inserting text:", error);
     });
   }
 
@@ -211,7 +238,7 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
 
                     ${Globals.currentConversation
                       .map((message) => message.RenderHTML()
-                      )
+                      ) 
                       .join("")}
                     
                     <div class="new"></div>

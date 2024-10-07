@@ -35,7 +35,12 @@
                 case 'loadMetadata':
 					loadingAnimation[0].scrollIntoView();
 					setTimeout(() => {
-						$(".answer .marked li").click(() => {console.log("clicked");});
+						$(".answer .marked li").unbind("click").bind("click", function(e) {
+							vscode.postMessage({
+								command: 'insertText',
+								message: {content: this.innerText}
+							});
+						});
 					}, 5000);
                     break;
 				////
