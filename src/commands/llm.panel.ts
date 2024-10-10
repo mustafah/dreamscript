@@ -246,13 +246,18 @@ export class LLMPanelViewProvider implements vscode.WebviewViewProvider {
                     <div class="fadeable loadingAnimation" style="opacity: 0"><img src="${eclipseGifUri}" /></div>
                 </div>
 
-                <div class="reference">
-                colors range from "color of Cotton Candy " to "color of Periwinkle",
-                </div>
                 <div id="chat-input">
                     <div id="file-input"></div>
                     <textarea id="query" placeholder=""></textarea>
                 </div>
+                
+                <div id="attachments">
+                
+                <div class="reference">
+                  colors range from "color of Cotton Candy " to "color of Periwinkle"
+                </div>
+                
+                  </div>
 
                 </div>
                 <link href="${stylesContextUri}" rel="stylesheet">

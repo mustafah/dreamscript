@@ -1,0 +1,20 @@
+percent="100%"
+progressive=False
+chunk="None"
+
+question="
+
+Do you see how they made a test called PreLandingLogCorrelationViewModelTest to PreLandingLogCorrelationViewModel.cs,
+please make another similar type of test to PostLandingLogCorrelationResultsViewModel.cs
+   
+
+"
+
+file_list="
+
+    C:\FEGeosteeringUI\Addin_Gridding\Sources\Gridding.Presentation.Logic\ViewModels\FEGeosteering\PreLanding\PreLandingLogCorrelationViewModel.cs
+    C:\FEGeosteeringUI\Addin_Gridding\Sources\Gridding.Presentation.UnitTest\Logic\ViewModels\FEGeosteering\PreLanding\PreLandingLogCorrelationViewModelTest.cs
+
+    C:\FEGeosteeringUI\Addin_Gridding\Sources\Gridding.Presentation.Logic\ViewModels\FEGeosteering\PostLanding\PostLandingLogCorrelationResultsViewModel.cs
+
+"

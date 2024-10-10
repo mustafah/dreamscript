@@ -6,7 +6,8 @@
     background-color: #242424;
     border-radius: 6px;
     overflow: hidden;
-    filter: drop-shadow(2px 4px 12px #2d2b55);
+    /* filter: drop-shadow(2px 4px 12px #2d2b55); */
+	background-color: var(--vscode-editor-background);
 }
 #chat-input:before, #chat-input:after {
 	content: '';
